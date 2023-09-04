@@ -6,6 +6,7 @@ import { z } from 'zod'
 
 import { Config } from './config/Config'
 import { SourcePipeline } from './pipeline/SourcePipeline'
+import { AxelarHeuristicSource } from './sources/AxelarHeuristicSource'
 import { AxelarSource } from './sources/AxelarSource'
 import { CoingeckoSource } from './sources/CoingeckoSource'
 import { DeploymentSource } from './sources/DeploymentSource'
@@ -124,6 +125,8 @@ export class Application {
           logger.tag('optimism'),
         ),
       )
+      .merge()
+      .add(new AxelarHeuristicSource())
 
     this.start = async () => {
       const tokens = await pipeline.getTokens()
