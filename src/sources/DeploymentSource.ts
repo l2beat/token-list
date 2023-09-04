@@ -40,13 +40,17 @@ export class DeploymentSource {
     )
 
     const results: TokenListing[] = []
-    for (const token of relevantTokens) {
+    for (const [i, token] of relevantTokens.entries()) {
       // we don't use Promise.all to not overload etherscan
 
       const address = Address.getRawAddress(token.address)
       const { name, ...deployment } = await this.getCachedDeployment(address)
 
-      this.logger.info('Got metadata', { address: token.address })
+      this.logger.info('Got metadata', {
+        index: i,
+        total: relevantTokens.length,
+        address: token.address,
+      })
 
       results.push({
         ...token,
