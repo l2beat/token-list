@@ -6,10 +6,12 @@ import { Address } from './Address'
 const AddressType = z.string().refine(Address.isAddress).transform(Address)
 
 export type Chain = z.infer<typeof Chain>
-export const Chain = z.object({
-  name: z.string(),
-  id: z.number(),
-})
+export const Chain = z
+  .object({
+    name: z.string(),
+    id: z.number(),
+  })
+  .strict()
 
 export type TokenListing = z.infer<typeof TokenListing>
 export const TokenListing = z

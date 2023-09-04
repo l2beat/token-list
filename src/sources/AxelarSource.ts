@@ -32,7 +32,7 @@ export class AxelarSource implements TokenSource {
     return logs.map(
       (log): TokenListing => ({
         address: Address(`${chain.prefix}:${log.args.tokenAddresses}`),
-        chain,
+        chain: { id: chain.id, name: chain.name },
         identifiers: { axelarId: log.args.symbol },
       }),
     )
