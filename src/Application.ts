@@ -1,7 +1,7 @@
 import { Logger } from '@l2beat/backend-tools'
 import { writeFile } from 'fs/promises'
-import { createPublicClient, http } from 'viem'
-import { mainnet } from 'viem/chains'
+import { PublicClient, createPublicClient, http } from 'viem'
+import { arbitrum, mainnet, optimism } from 'viem/chains'
 
 import { Config } from './config/Config'
 import { SourcePipeline } from './pipeline/SourcePipeline'
@@ -22,7 +22,24 @@ export class Application {
 
     const mainnetClient = createPublicClient({
       chain: mainnet,
-      transport: http(),
+      transport: http(config.jsonRpc.mainnetUrl),
+      batch: {
+        multicall: true,
+      },
+    })
+
+    const arbitrumClient = createPublicClient({
+      chain: arbitrum,
+      transport: http(config.jsonRpc.arbitrumUrl),
+      batch: {
+        multicall: true,
+      },
+    })
+
+    const optimismClient: PublicClient = createPublicClient({
+      // TODO: breaks types because of different block type
+      // chain: optimism,
+      transport: http(config.jsonRpc.optimismUrl),
       batch: {
         multicall: true,
       },
@@ -33,14 +50,52 @@ export class Application {
       .add(new JsonSource('data/axelar-ethereum.json', logger))
       .add(new CoingeckoSource(logger))
       .merge()
-      .add(new OnChainMetadataSource(mainnetClient, 1, logger.tag('mainnet')))
+      .add(
+        new OnChainMetadataSource(
+          mainnetClient,
+          mainnet.id,
+          logger.tag('mainnet'),
+        ),
+      )
+      .add(
+        new OnChainMetadataSource(
+          arbitrumClient,
+          arbitrum.id,
+          logger.tag('arbitrum'),
+        ),
+      )
+      .add(
+        new OnChainMetadataSource(
+          optimismClient,
+          optimism.id,
+          logger.tag('optimism'),
+        ),
+      )
       .add(
         new DeploymentSource(
           config.etherscan.mainnet.apiUrl,
           config.etherscan.mainnet.apiKey,
           mainnetClient,
-          1,
+          mainnet.id,
           logger.tag('mainnet'),
+        ),
+      )
+      .add(
+        new DeploymentSource(
+          config.etherscan.arbitrum.apiUrl,
+          config.etherscan.arbitrum.apiKey,
+          arbitrumClient,
+          arbitrum.id,
+          logger.tag('arbitrum'),
+        ),
+      )
+      .add(
+        new DeploymentSource(
+          config.etherscan.optimism.apiUrl,
+          config.etherscan.optimism.apiKey,
+          optimismClient,
+          optimism.id,
+          logger.tag('optimism'),
         ),
       )
 

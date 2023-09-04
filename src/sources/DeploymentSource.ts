@@ -77,6 +77,13 @@ export class DeploymentSource {
     const source = await this.getContractSource(address)
     const deployment = await this.getContractDeployment(address)
 
+    if (deployment?.txHash.startsWith('GENESIS')) {
+      return {
+        contractName: source?.ContractName ? source.ContractName : undefined,
+        transactionHash: deployment.txHash,
+      }
+    }
+
     const tx =
       deployment &&
       (await this.publicClient.getTransaction({
@@ -89,7 +96,7 @@ export class DeploymentSource {
       }))
 
     return {
-      isEOA: !deployment,
+      isEOA: deployment ? undefined : true,
       contractName: source?.ContractName ? source.ContractName : undefined,
       transactionHash: deployment?.txHash,
       blockNumber: tx && Number(tx.blockNumber),
@@ -118,7 +125,6 @@ export class DeploymentSource {
       return undefined
     }
     if (response.message !== 'OK') {
-      console.log(address)
       throw new Error(`Unexpected response: ${response.message}`)
     }
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

@@ -59,12 +59,12 @@ const platforms = [
     chainName: 'Arbitrum One',
     chainId: 42161,
   },
-  {
-    id: 'polygon-zkevm',
-    chainPrefix: 'polygon-zkevm',
-    chainName: 'Polygon zkEVM',
-    chainId: 1101,
-  },
+  // {
+  //   id: 'polygon-zkevm',
+  //   chainPrefix: 'polygon-zkevm',
+  //   chainName: 'Polygon zkEVM',
+  //   chainId: 1101,
+  // },
 ]
 
 const CoingeckoResponse = z.array(
