@@ -1,4 +1,5 @@
 import { Application } from './Application'
+import { getConfig } from './config/getConfig'
 
 main().catch((e) => {
   console.error(e)
@@ -6,6 +7,7 @@ main().catch((e) => {
 })
 
 async function main() {
-  const app = new Application()
+  const config = getConfig()
+  const app = new Application(config)
   await app.start()
 }

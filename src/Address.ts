@@ -14,7 +14,7 @@ export function Address(value: string): Address {
     throw new Error(`Invalid chain prefix: ${chainPrefix}`)
   }
 
-  if (address !== 'native' && (!address || !isChecksumAddress(address))) {
+  if (!address || !isChecksumAddress(address)) {
     throw new Error(`Invalid address format: ${address}`)
   }
 

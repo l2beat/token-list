@@ -34,6 +34,7 @@
     "wait-for-expect": "^3.0.2"
   },
   "dependencies": {
+    "@l2beat/backend-tools": "^0.2.0",
     "@types/lodash": "^4.14.197",
     "lodash": "^4.17.21",
     "node-fetch": "^3.3.2",

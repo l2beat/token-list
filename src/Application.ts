@@ -2,15 +2,17 @@ import { writeFile } from 'fs/promises'
 import { createPublicClient, http } from 'viem'
 import { mainnet } from 'viem/chains'
 
+import { Config } from './config/Config'
 import { SourcePipeline } from './pipeline/SourcePipeline'
 import { CoingeckoSource } from './sources/CoingeckoSource'
+import { EtherscanMetadataSource } from './sources/EtherscanSource'
 import { JsonSource } from './sources/JsonSource'
 import { OnChainMetadataSource } from './sources/OnChainMetadataSource'
 
 export class Application {
   start: () => Promise<void>
 
-  constructor() {
+  constructor(config: Config) {
     const mainnetClient = createPublicClient({
       chain: mainnet,
       transport: http(),
@@ -27,7 +29,14 @@ export class Application {
       // .add(new MultichainApiSource())
       .merge()
       .add(new OnChainMetadataSource(mainnetClient, 1))
-    // .add(new EtherscanMetadataSource())
+      .add(
+        new EtherscanMetadataSource(
+          config.etherscan.mainnet.apiUrl,
+          config.etherscan.mainnet.apiKey,
+          mainnetClient,
+          1,
+        ),
+      )
     // .merge()
     // .add(new AxelarNativeDeterminationSource())
 

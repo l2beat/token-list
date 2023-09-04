@@ -26,6 +26,12 @@ export const TokenListing = z
       })
       .strict()
       .optional(),
+    contract: z
+      .object({
+        name: z.string().optional(),
+      })
+      .strict()
+      .optional(),
     deployment: z
       .object({
         transactionHash: z.string().optional(),

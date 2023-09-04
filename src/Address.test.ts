@@ -3,10 +3,6 @@ import { expect } from 'earl'
 import { Address } from './Address'
 
 describe(Address.name, () => {
-  it('supports native tokens like ETH', () => {
-    expect(() => Address('eth:native')).not.toThrow()
-  })
-
   it('supports tokens with address like DAI', () => {
     expect(() =>
       Address('eth:0x6B175474E89094C44Da98b954EedeAC495271d0F'),
