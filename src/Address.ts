@@ -34,7 +34,7 @@ Address.getPrefix = function getPrefix(tokenAddress: Address): ChainPrefix {
   return tokenAddress.split(':')[0] as ChainPrefix
 }
 
-const ALLOWED_CHAIN_PREFIXES = ['eth', 'arb', 'op'] as const
+const ALLOWED_CHAIN_PREFIXES = ['eth', 'arb', 'op', 'polygon-zkevm'] as const
 export type ChainPrefix = (typeof ALLOWED_CHAIN_PREFIXES)[number]
 
 export function isValidChainPrefix(value: string): value is ChainPrefix {
