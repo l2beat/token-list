@@ -37,13 +37,15 @@ export class DeploymentSource {
       // we don't use Promise.all to not overload etherscan
 
       const address = Address.getRawAddress(token.address)
-      const deployment = await this.getCachedDeployment(address)
+      const { deployment, isCached } = await this.getCachedDeployment(address)
 
-      this.logger.info('Got metadata', {
-        index: i,
-        total: relevantTokens.length,
-        address: token.address,
-      })
+      if (!isCached) {
+        this.logger.info('Got metadata', {
+          index: i,
+          total: relevantTokens.length,
+          address: token.address,
+        })
+      }
 
       results.push({
         ...token,
@@ -57,13 +59,13 @@ export class DeploymentSource {
   private async getCachedDeployment(address: `0x${string}`) {
     const cached = this.cache.get(address)
     if (cached) {
-      return cached
+      return { deployment: cached, isCached: true }
     }
     while (true) {
       try {
         const deployment = await this.getDeployment(address)
         this.cache.set(address, deployment)
-        return deployment
+        return { deployment, isCached: false }
       } catch (e) {
         this.logger.error('Failed to get deployment', e)
         await setTimeout(5_000)
@@ -87,7 +89,8 @@ export class DeploymentSource {
       }))
 
     return {
-      contractName: source?.ContractName,
+      isEOA: !deployment,
+      contractName: source?.ContractName ? source.ContractName : undefined,
       transactionHash: deployment?.txHash,
       blockNumber: tx && Number(tx.blockNumber),
       timestamp:
