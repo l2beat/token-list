@@ -5,3 +5,5 @@ node_modules
 .idea
 build
 .env
+cache
+!src/cache

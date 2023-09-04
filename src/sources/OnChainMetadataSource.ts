@@ -1,8 +1,8 @@
+import { Logger } from '@l2beat/backend-tools'
 import { getContract, parseAbiItem, PublicClient } from 'viem'
 
 import { Address } from '../Address'
 import { TokenListing } from '../TokenListing'
-import { Logger } from '@l2beat/backend-tools'
 
 const abi = [
   parseAbiItem('function name() view returns (string)'),
@@ -14,7 +14,7 @@ export class OnChainMetadataSource {
   constructor(
     private readonly publicClient: PublicClient,
     private readonly chainId: number,
-    private logger: Logger,
+    private readonly logger: Logger,
   ) {
     this.logger = logger.for(this)
   }

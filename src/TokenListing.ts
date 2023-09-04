@@ -36,7 +36,7 @@ export const TokenListing = z
       .object({
         transactionHash: z.string().optional(),
         blockNumber: z.number().optional(),
-        timestamp: z.number().optional(),
+        timestamp: z.string().datetime(),
       })
       .strict()
       .optional(),

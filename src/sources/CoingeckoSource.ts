@@ -1,3 +1,4 @@
+import { Logger } from '@l2beat/backend-tools'
 import fetch from 'node-fetch'
 import { getAddress } from 'viem'
 import { z } from 'zod'
@@ -5,12 +6,11 @@ import { z } from 'zod'
 import { Address } from '../Address'
 import { TokenSource } from '../pipeline/TokenSource'
 import { TokenListing } from '../TokenListing'
-import { Logger } from '@l2beat/backend-tools'
 
 const URL = 'https://api.coingecko.com/api/v3/coins/list?include_platform=true'
 
 export class CoingeckoSource implements TokenSource {
-  constructor(private logger: Logger) {
+  constructor(private readonly logger: Logger) {
     this.logger = logger.for(this)
   }
 

@@ -1,14 +1,14 @@
+import { Logger } from '@l2beat/backend-tools'
 import { readFile } from 'fs/promises'
 import { z } from 'zod'
 
 import { TokenSource } from '../pipeline/TokenSource'
 import { TokenListing } from '../TokenListing'
-import { Logger } from '@l2beat/backend-tools'
 
 export class JsonSource implements TokenSource {
   constructor(
     private readonly filePath: string,
-    private logger: Logger,
+    private readonly logger: Logger,
   ) {
     this.logger = logger.for(this)
   }

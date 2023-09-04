@@ -1,3 +1,4 @@
+import { Logger } from '@l2beat/backend-tools'
 import { writeFile } from 'fs/promises'
 import { createPublicClient, http } from 'viem'
 import { mainnet } from 'viem/chains'
@@ -8,7 +9,6 @@ import { CoingeckoSource } from './sources/CoingeckoSource'
 import { DeploymentSource } from './sources/DeploymentSource'
 import { JsonSource } from './sources/JsonSource'
 import { OnChainMetadataSource } from './sources/OnChainMetadataSource'
-import { Logger } from '@l2beat/backend-tools'
 
 export class Application {
   start: () => Promise<void>
@@ -30,10 +30,10 @@ export class Application {
 
     const pipeline = new SourcePipeline()
       .add(new JsonSource('tokens.json', logger))
-      // .add(new JsonSource('data/axelar-ethereum.json', logger))
-      // .add(new CoingeckoSource(logger))
+      .add(new JsonSource('data/axelar-ethereum.json', logger))
+      .add(new CoingeckoSource(logger))
       .merge()
-      // .add(new OnChainMetadataSource(mainnetClient, 1, logger.tag('mainnet')))
+      .add(new OnChainMetadataSource(mainnetClient, 1, logger.tag('mainnet')))
       .add(
         new DeploymentSource(
           config.etherscan.mainnet.apiUrl,

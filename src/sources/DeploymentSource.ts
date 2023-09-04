@@ -1,20 +1,32 @@
+import { Logger } from '@l2beat/backend-tools'
 import fetch from 'node-fetch'
+import { setTimeout } from 'timers/promises'
 import { PublicClient } from 'viem'
 import { z } from 'zod'
 
 import { Address } from '../Address'
+import { Cache } from '../cache/Cache'
 import { TokenListing } from '../TokenListing'
-import { Logger } from '@l2beat/backend-tools'
+
+interface Deployment {
+  name: string
+  transactionHash: string
+  blockNumber: number
+  timestamp: string
+}
 
 export class DeploymentSource {
+  private readonly cache: Cache<Deployment>
+
   constructor(
     private readonly apiUrl: string,
     private readonly apiKey: string,
     private readonly publicClient: PublicClient,
     private readonly chainId: number,
-    private logger: Logger,
+    private readonly logger: Logger,
   ) {
     this.logger = logger.for(this)
+    this.cache = new Cache<Deployment>(`deployments-${chainId}.json`)
   }
 
   async getTokens(
@@ -27,52 +39,69 @@ export class DeploymentSource {
         token.deployment === undefined,
     )
 
-    if (relevantTokens.length > 10) {
-      this.logger.info('Too many tokens', { length: relevantTokens.length })
-      relevantTokens.length = 10
-    }
-
     const results: TokenListing[] = []
     for (const token of relevantTokens) {
       // we don't use Promise.all to not overload etherscan
-      const source = await this.getContractSource(token.address)
-      const deployment = await this.getContractDeployment(token.address)
-      const tx = await this.publicClient.getTransaction({
-        hash: deployment.txHash as `0x${string}`,
-      })
-      const block = await this.publicClient.getBlock({
-        blockNumber: tx.blockNumber,
-      })
+
+      const address = Address.getRawAddress(token.address)
+      const { name, ...deployment } = await this.getCachedDeployment(address)
 
       this.logger.info('Got metadata', { address: token.address })
 
       results.push({
         ...token,
-        contract: {
-          name: source.ContractName,
-        },
-        deployment: {
-          transactionHash: deployment.txHash,
-          blockNumber: Number(tx.blockNumber),
-          timestamp: Number(block.timestamp),
-        },
+        contract: { name },
+        deployment,
       })
     }
 
     return results
   }
 
-  async getContractSource(address: Address) {
-    const response = await this.call('contract', 'getsourcecode', {
-      address: Address.getRawAddress(address),
+  private async getCachedDeployment(address: `0x${string}`) {
+    const cached = this.cache.get(address)
+    if (cached) {
+      return cached
+    }
+    while (true) {
+      try {
+        const deployment = await this.getDeployment(address)
+        this.cache.set(address, deployment)
+        return deployment
+      } catch (e) {
+        this.logger.error('Failed to get deployment', e)
+        await setTimeout(5_000)
+      }
+    }
+  }
+
+  private async getDeployment(address: `0x${string}`): Promise<Deployment> {
+    const source = await this.getContractSource(address)
+    const deployment = await this.getContractDeployment(address)
+    const tx = await this.publicClient.getTransaction({
+      hash: deployment.txHash as `0x${string}`,
     })
+    const block = await this.publicClient.getBlock({
+      blockNumber: tx.blockNumber,
+    })
+
+    return {
+      name: source.ContractName,
+      transactionHash: deployment.txHash,
+      blockNumber: Number(tx.blockNumber),
+      timestamp: new Date(Number(block.timestamp) * 1000).toISOString(),
+    }
+  }
+
+  async getContractSource(address: `0x${string}`) {
+    const response = await this.call('contract', 'getsourcecode', { address })
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     return GetSourceCodeResult.parse(response)[0]!
   }
 
-  async getContractDeployment(address: Address) {
+  async getContractDeployment(address: `0x${string}`) {
     const response = await this.call('contract', 'getcontractcreation', {
-      contractaddresses: Address.getRawAddress(address),
+      contractaddresses: address,
     })
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     return GetContractCreationResult.parse(response)[0]!
