@@ -34,6 +34,12 @@ Address.getPrefix = function getPrefix(tokenAddress: Address): ChainPrefix {
   return tokenAddress.split(':')[0] as ChainPrefix
 }
 
+Address.getRawAddress = function getRawAddress(
+  tokenAddress: Address,
+): `0x${string}` {
+  return tokenAddress.split(':')[1] as `0x${string}`
+}
+
 const ALLOWED_CHAIN_PREFIXES = ['eth', 'arb', 'op', 'polygon-zkevm'] as const
 export type ChainPrefix = (typeof ALLOWED_CHAIN_PREFIXES)[number]
 

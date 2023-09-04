@@ -1,11 +1,10 @@
+import fetch from 'node-fetch'
+import { getAddress } from 'viem'
 import { z } from 'zod'
 
-import fetch from 'node-fetch'
-
+import { Address } from '../Address'
 import { TokenSource } from '../pipeline/TokenSource'
 import { TokenListing } from '../TokenListing'
-import { getAddress } from 'viem'
-import { Address } from '../Address'
 
 const URL = 'https://api.coingecko.com/api/v3/coins/list?include_platform=true'
 
