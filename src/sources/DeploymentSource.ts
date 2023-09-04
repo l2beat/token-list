@@ -8,12 +8,7 @@ import { Address } from '../Address'
 import { Cache } from '../cache/Cache'
 import { TokenListing } from '../TokenListing'
 
-interface Deployment {
-  name: string
-  transactionHash: string
-  blockNumber: number
-  timestamp: string
-}
+type Deployment = TokenListing['deployment']
 
 export class DeploymentSource {
   private readonly cache: Cache<Deployment>
@@ -34,9 +29,7 @@ export class DeploymentSource {
   ): Promise<TokenListing[]> {
     const relevantTokens = knownTokens.filter(
       (token) =>
-        token.chain?.id === this.chainId &&
-        token.contract === undefined &&
-        token.deployment === undefined,
+        token.chain?.id === this.chainId && token.deployment === undefined,
     )
 
     const results: TokenListing[] = []
@@ -44,7 +37,7 @@ export class DeploymentSource {
       // we don't use Promise.all to not overload etherscan
 
       const address = Address.getRawAddress(token.address)
-      const { name, ...deployment } = await this.getCachedDeployment(address)
+      const deployment = await this.getCachedDeployment(address)
 
       this.logger.info('Got metadata', {
         index: i,
@@ -54,7 +47,6 @@ export class DeploymentSource {
 
       results.push({
         ...token,
-        contract: { name },
         deployment,
       })
     }
@@ -82,33 +74,52 @@ export class DeploymentSource {
   private async getDeployment(address: `0x${string}`): Promise<Deployment> {
     const source = await this.getContractSource(address)
     const deployment = await this.getContractDeployment(address)
-    const tx = await this.publicClient.getTransaction({
-      hash: deployment.txHash as `0x${string}`,
-    })
-    const block = await this.publicClient.getBlock({
-      blockNumber: tx.blockNumber,
-    })
+
+    const tx =
+      deployment &&
+      (await this.publicClient.getTransaction({
+        hash: deployment.txHash as `0x${string}`,
+      }))
+    const block =
+      tx &&
+      (await this.publicClient.getBlock({
+        blockNumber: tx.blockNumber,
+      }))
 
     return {
-      name: source.ContractName,
-      transactionHash: deployment.txHash,
-      blockNumber: Number(tx.blockNumber),
-      timestamp: new Date(Number(block.timestamp) * 1000).toISOString(),
+      contractName: source?.ContractName,
+      transactionHash: deployment?.txHash,
+      blockNumber: tx && Number(tx.blockNumber),
+      timestamp:
+        block && new Date(Number(block.timestamp) * 1000).toISOString(),
     }
   }
 
   async getContractSource(address: `0x${string}`) {
     const response = await this.call('contract', 'getsourcecode', { address })
+    if (response.message === 'No data found') {
+      return undefined
+    }
+    if (response.message !== 'OK') {
+      throw new Error(`Unexpected response: ${response.message}`)
+    }
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    return GetSourceCodeResult.parse(response)[0]!
+    return GetSourceCodeResult.parse(response.result)[0]!
   }
 
   async getContractDeployment(address: `0x${string}`) {
     const response = await this.call('contract', 'getcontractcreation', {
       contractaddresses: address,
     })
+    if (response.message === 'No data found') {
+      return undefined
+    }
+    if (response.message !== 'OK') {
+      console.log(address)
+      throw new Error(`Unexpected response: ${response.message}`)
+    }
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    return GetContractCreationResult.parse(response)[0]!
+    return GetContractCreationResult.parse(response.result)[0]!
   }
 
   async call(module: string, action: string, params: Record<string, string>) {
@@ -124,31 +135,15 @@ export class DeploymentSource {
     const json = await res.json()
     const response = EtherscanResponse.parse(json)
 
-    if (response.message !== 'OK') {
-      throw new Error(response.result)
-    }
-
-    return response.result
+    return response
   }
 }
 
-export type EtherscanSuccessResponse = z.infer<typeof EtherscanSuccessResponse>
-const EtherscanSuccessResponse = z.object({
-  message: z.literal('OK'),
-  result: z.unknown(),
-})
-
-export type EtherscanErrorResponse = z.infer<typeof EtherscanErrorResponse>
-const EtherscanErrorResponse = z.object({
-  message: z.literal('NOTOK'),
-  result: z.string(),
-})
-
 export type EtherscanResponse = z.infer<typeof EtherscanResponse>
-const EtherscanResponse = z.union([
-  EtherscanSuccessResponse,
-  EtherscanErrorResponse,
-])
+const EtherscanResponse = z.object({
+  message: z.string(),
+  result: z.unknown().optional(),
+})
 
 export type ContractSource = z.infer<typeof ContractSource>
 export const ContractSource = z.object({

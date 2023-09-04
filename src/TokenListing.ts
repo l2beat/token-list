@@ -26,17 +26,13 @@ export const TokenListing = z
       })
       .strict()
       .optional(),
-    contract: z
-      .object({
-        name: z.string().optional(),
-      })
-      .strict()
-      .optional(),
     deployment: z
       .object({
+        isEOA: z.boolean().optional(),
+        contractName: z.string().optional(),
         transactionHash: z.string().optional(),
         blockNumber: z.number().optional(),
-        timestamp: z.string().datetime(),
+        timestamp: z.string().datetime().optional(),
       })
       .strict()
       .optional(),
