@@ -127,8 +127,11 @@ export class Application {
 
     this.start = async () => {
       const tokens = await pipeline.getTokens()
-      // We need this to enforce a consistent property order
-      const data = z.array(TokenListing).parse(tokens)
+      // We need this to enforce consistent sorting and property order
+      const data = z
+        .array(TokenListing)
+        .parse(tokens)
+        .sort((a, b) => a.address.localeCompare(b.address.toString()))
       await writeFile('tokens.json', JSON.stringify(data, null, 2))
     }
   }
