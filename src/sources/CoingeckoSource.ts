@@ -5,10 +5,15 @@ import { z } from 'zod'
 import { Address } from '../Address'
 import { TokenSource } from '../pipeline/TokenSource'
 import { TokenListing } from '../TokenListing'
+import { Logger } from '@l2beat/backend-tools'
 
 const URL = 'https://api.coingecko.com/api/v3/coins/list?include_platform=true'
 
 export class CoingeckoSource implements TokenSource {
+  constructor(private logger: Logger) {
+    this.logger = logger.for(this)
+  }
+
   async getTokens(): Promise<TokenListing[]> {
     const res = await fetch(URL)
     const json = await res.json()
@@ -28,6 +33,8 @@ export class CoingeckoSource implements TokenSource {
         }
       }
     }
+
+    this.logger.info('Got tokens', { length: listings.length })
 
     return listings
   }

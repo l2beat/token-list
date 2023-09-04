@@ -2,6 +2,7 @@ import { getContract, parseAbiItem, PublicClient } from 'viem'
 
 import { Address } from '../Address'
 import { TokenListing } from '../TokenListing'
+import { Logger } from '@l2beat/backend-tools'
 
 const abi = [
   parseAbiItem('function name() view returns (string)'),
@@ -13,7 +14,10 @@ export class OnChainMetadataSource {
   constructor(
     private readonly publicClient: PublicClient,
     private readonly chainId: number,
-  ) {}
+    private logger: Logger,
+  ) {
+    this.logger = logger.for(this)
+  }
 
   async getTokens(
     knownTokens: readonly TokenListing[],
@@ -54,6 +58,8 @@ export class OnChainMetadataSource {
         }
       }),
     )
+
+    this.logger.info('Got metadata', { length: results.length })
 
     return results
   }

@@ -5,14 +5,21 @@ import { mainnet } from 'viem/chains'
 import { Config } from './config/Config'
 import { SourcePipeline } from './pipeline/SourcePipeline'
 import { CoingeckoSource } from './sources/CoingeckoSource'
-import { EtherscanMetadataSource } from './sources/EtherscanSource'
+import { DeploymentSource } from './sources/DeploymentSource'
 import { JsonSource } from './sources/JsonSource'
 import { OnChainMetadataSource } from './sources/OnChainMetadataSource'
+import { Logger } from '@l2beat/backend-tools'
 
 export class Application {
   start: () => Promise<void>
 
   constructor(config: Config) {
+    const logger = new Logger({
+      logLevel: 'INFO',
+      format: 'pretty',
+      colors: true,
+    })
+
     const mainnetClient = createPublicClient({
       chain: mainnet,
       transport: http(),
@@ -22,23 +29,20 @@ export class Application {
     })
 
     const pipeline = new SourcePipeline()
-      .add(new JsonSource('tokens.json'))
-      .add(new JsonSource('data/axelar-ethereum.json'))
-      .add(new CoingeckoSource())
-      // .add(new AxelarSource())
-      // .add(new MultichainApiSource())
+      .add(new JsonSource('tokens.json', logger))
+      // .add(new JsonSource('data/axelar-ethereum.json', logger))
+      // .add(new CoingeckoSource(logger))
       .merge()
-      .add(new OnChainMetadataSource(mainnetClient, 1))
+      // .add(new OnChainMetadataSource(mainnetClient, 1, logger.tag('mainnet')))
       .add(
-        new EtherscanMetadataSource(
+        new DeploymentSource(
           config.etherscan.mainnet.apiUrl,
           config.etherscan.mainnet.apiKey,
           mainnetClient,
           1,
+          logger.tag('mainnet'),
         ),
       )
-    // .merge()
-    // .add(new AxelarNativeDeterminationSource())
 
     this.start = async () => {
       const tokens = await pipeline.getTokens()

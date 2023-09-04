@@ -4,14 +4,18 @@ import { z } from 'zod'
 
 import { Address } from '../Address'
 import { TokenListing } from '../TokenListing'
+import { Logger } from '@l2beat/backend-tools'
 
-export class EtherscanMetadataSource {
+export class DeploymentSource {
   constructor(
     private readonly apiUrl: string,
     private readonly apiKey: string,
     private readonly publicClient: PublicClient,
     private readonly chainId: number,
-  ) {}
+    private logger: Logger,
+  ) {
+    this.logger = logger.for(this)
+  }
 
   async getTokens(
     knownTokens: readonly TokenListing[],
@@ -24,7 +28,7 @@ export class EtherscanMetadataSource {
     )
 
     if (relevantTokens.length > 10) {
-      console.log('Cutting length', relevantTokens.length)
+      this.logger.info('Too many tokens', { length: relevantTokens.length })
       relevantTokens.length = 10
     }
 
@@ -39,6 +43,8 @@ export class EtherscanMetadataSource {
       const block = await this.publicClient.getBlock({
         blockNumber: tx.blockNumber,
       })
+
+      this.logger.info('Got metadata', { address: token.address })
 
       results.push({
         ...token,
