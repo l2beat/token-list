@@ -38,6 +38,7 @@ export const TokenListing = z
       .object({
         coingeckoId: z.string().optional(),
         coinmarketcapId: z.string().optional(),
+        axelarId: z.string().optional(),
       })
       .strict()
       .optional(),

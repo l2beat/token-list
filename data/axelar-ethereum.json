@@ -4,6 +4,12 @@
     "chain": {
       "name": "Ethereum",
       "id": 1
+    },
+    "identifiers": {
+      "axelarId": "AXL"
+    },
+    "bridge": {
+      "name": "Axelar"
     }
   },
   {
@@ -11,6 +17,12 @@
     "chain": {
       "name": "Ethereum",
       "id": 1
+    },
+    "identifiers": {
+      "axelarId": "AXL"
+    },
+    "bridge": {
+      "name": "Axelar"
     }
   },
   {
@@ -18,6 +30,12 @@
     "chain": {
       "name": "Ethereum",
       "id": 1
+    },
+    "identifiers": {
+      "axelarId": "UST"
+    },
+    "bridge": {
+      "name": "Axelar"
     }
   },
   {
@@ -25,6 +43,12 @@
     "chain": {
       "name": "Ethereum",
       "id": 1
+    },
+    "identifiers": {
+      "axelarId": "LUNA"
+    },
+    "bridge": {
+      "name": "Axelar"
     }
   },
   {
@@ -32,6 +56,12 @@
     "chain": {
       "name": "Ethereum",
       "id": 1
+    },
+    "identifiers": {
+      "axelarId": "axlATOM"
+    },
+    "bridge": {
+      "name": "Axelar"
     }
   },
   {
@@ -39,6 +69,12 @@
     "chain": {
       "name": "Ethereum",
       "id": 1
+    },
+    "identifiers": {
+      "axelarId": "USDC"
+    },
+    "bridge": {
+      "name": "Axelar"
     }
   },
   {
@@ -46,6 +82,12 @@
     "chain": {
       "name": "Ethereum",
       "id": 1
+    },
+    "identifiers": {
+      "axelarId": "axlJUNO"
+    },
+    "bridge": {
+      "name": "Axelar"
     }
   },
   {
@@ -53,6 +95,12 @@
     "chain": {
       "name": "Ethereum",
       "id": 1
+    },
+    "identifiers": {
+      "axelarId": "FRAX"
+    },
+    "bridge": {
+      "name": "Axelar"
     }
   },
   {
@@ -60,6 +108,12 @@
     "chain": {
       "name": "Ethereum",
       "id": 1
+    },
+    "identifiers": {
+      "axelarId": "DAI"
+    },
+    "bridge": {
+      "name": "Axelar"
     }
   },
   {
@@ -67,6 +121,12 @@
     "chain": {
       "name": "Ethereum",
       "id": 1
+    },
+    "identifiers": {
+      "axelarId": "USDT"
+    },
+    "bridge": {
+      "name": "Axelar"
     }
   },
   {
@@ -74,6 +134,12 @@
     "chain": {
       "name": "Ethereum",
       "id": 1
+    },
+    "identifiers": {
+      "axelarId": "NGM"
+    },
+    "bridge": {
+      "name": "Axelar"
     }
   },
   {
@@ -81,6 +147,12 @@
     "chain": {
       "name": "Ethereum",
       "id": 1
+    },
+    "identifiers": {
+      "axelarId": "EEUR"
+    },
+    "bridge": {
+      "name": "Axelar"
     }
   },
   {
@@ -88,6 +160,12 @@
     "chain": {
       "name": "Ethereum",
       "id": 1
+    },
+    "identifiers": {
+      "axelarId": "WETH"
+    },
+    "bridge": {
+      "name": "Axelar"
     }
   },
   {
@@ -95,6 +173,12 @@
     "chain": {
       "name": "Ethereum",
       "id": 1
+    },
+    "identifiers": {
+      "axelarId": "WBTC"
+    },
+    "bridge": {
+      "name": "Axelar"
     }
   },
   {
@@ -102,6 +186,12 @@
     "chain": {
       "name": "Ethereum",
       "id": 1
+    },
+    "identifiers": {
+      "axelarId": "stETH"
+    },
+    "bridge": {
+      "name": "Axelar"
     }
   },
   {
@@ -109,6 +199,12 @@
     "chain": {
       "name": "Ethereum",
       "id": 1
+    },
+    "identifiers": {
+      "axelarId": "APE"
+    },
+    "bridge": {
+      "name": "Axelar"
     }
   },
   {
@@ -116,6 +212,12 @@
     "chain": {
       "name": "Ethereum",
       "id": 1
+    },
+    "identifiers": {
+      "axelarId": "UNI"
+    },
+    "bridge": {
+      "name": "Axelar"
     }
   },
   {
@@ -123,6 +225,12 @@
     "chain": {
       "name": "Ethereum",
       "id": 1
+    },
+    "identifiers": {
+      "axelarId": "LINK"
+    },
+    "bridge": {
+      "name": "Axelar"
     }
   },
   {
@@ -130,6 +238,12 @@
     "chain": {
       "name": "Ethereum",
       "id": 1
+    },
+    "identifiers": {
+      "axelarId": "SHIB"
+    },
+    "bridge": {
+      "name": "Axelar"
     }
   },
   {
@@ -137,6 +251,12 @@
     "chain": {
       "name": "Ethereum",
       "id": 1
+    },
+    "identifiers": {
+      "axelarId": "AXS"
+    },
+    "bridge": {
+      "name": "Axelar"
     }
   },
   {
@@ -144,6 +264,12 @@
     "chain": {
       "name": "Ethereum",
       "id": 1
+    },
+    "identifiers": {
+      "axelarId": "XCN"
+    },
+    "bridge": {
+      "name": "Axelar"
     }
   },
   {
@@ -151,6 +277,12 @@
     "chain": {
       "name": "Ethereum",
       "id": 1
+    },
+    "identifiers": {
+      "axelarId": "MKR"
+    },
+    "bridge": {
+      "name": "Axelar"
     }
   },
   {
@@ -158,6 +290,12 @@
     "chain": {
       "name": "Ethereum",
       "id": 1
+    },
+    "identifiers": {
+      "axelarId": "AAVE"
+    },
+    "bridge": {
+      "name": "Axelar"
     }
   },
   {
@@ -165,6 +303,12 @@
     "chain": {
       "name": "Ethereum",
       "id": 1
+    },
+    "identifiers": {
+      "axelarId": "RAI"
+    },
+    "bridge": {
+      "name": "Axelar"
     }
   },
   {
@@ -172,6 +316,12 @@
     "chain": {
       "name": "Ethereum",
       "id": 1
+    },
+    "identifiers": {
+      "axelarId": "BUSD"
+    },
+    "bridge": {
+      "name": "Axelar"
     }
   },
   {
@@ -179,6 +329,12 @@
     "chain": {
       "name": "Ethereum",
       "id": 1
+    },
+    "identifiers": {
+      "axelarId": "STRD"
+    },
+    "bridge": {
+      "name": "Axelar"
     }
   },
   {
@@ -186,6 +342,12 @@
     "chain": {
       "name": "Ethereum",
       "id": 1
+    },
+    "identifiers": {
+      "axelarId": "stATOM"
+    },
+    "bridge": {
+      "name": "Axelar"
     }
   },
   {
@@ -193,6 +355,12 @@
     "chain": {
       "name": "Ethereum",
       "id": 1
+    },
+    "identifiers": {
+      "axelarId": "axlFIL"
+    },
+    "bridge": {
+      "name": "Axelar"
     }
   },
   {
@@ -200,6 +368,12 @@
     "chain": {
       "name": "Ethereum",
       "id": 1
+    },
+    "identifiers": {
+      "axelarId": "wstETH"
+    },
+    "bridge": {
+      "name": "Axelar"
     }
   },
   {
@@ -207,6 +381,12 @@
     "chain": {
       "name": "Ethereum",
       "id": 1
+    },
+    "identifiers": {
+      "axelarId": "cbETH"
+    },
+    "bridge": {
+      "name": "Axelar"
     }
   },
   {
@@ -214,6 +394,12 @@
     "chain": {
       "name": "Ethereum",
       "id": 1
+    },
+    "identifiers": {
+      "axelarId": "frxETH"
+    },
+    "bridge": {
+      "name": "Axelar"
     }
   },
   {
@@ -221,6 +407,12 @@
     "chain": {
       "name": "Ethereum",
       "id": 1
+    },
+    "identifiers": {
+      "axelarId": "rETH"
+    },
+    "bridge": {
+      "name": "Axelar"
     }
   },
   {
@@ -228,6 +420,12 @@
     "chain": {
       "name": "Ethereum",
       "id": 1
+    },
+    "identifiers": {
+      "axelarId": "sfrxETH"
+    },
+    "bridge": {
+      "name": "Axelar"
     }
   },
   {
@@ -235,6 +433,12 @@
     "chain": {
       "name": "Ethereum",
       "id": 1
+    },
+    "identifiers": {
+      "axelarId": "PEPE"
+    },
+    "bridge": {
+      "name": "Axelar"
     }
   },
   {
@@ -242,6 +446,12 @@
     "chain": {
       "name": "Ethereum",
       "id": 1
+    },
+    "identifiers": {
+      "axelarId": "YieldETH"
+    },
+    "bridge": {
+      "name": "Axelar"
     }
   },
   {
@@ -249,6 +459,12 @@
     "chain": {
       "name": "Ethereum",
       "id": 1
+    },
+    "identifiers": {
+      "axelarId": "YieldUSD"
+    },
+    "bridge": {
+      "name": "Axelar"
     }
   },
   {
@@ -256,6 +472,12 @@
     "chain": {
       "name": "Ethereum",
       "id": 1
+    },
+    "identifiers": {
+      "axelarId": "WMAI"
+    },
+    "bridge": {
+      "name": "Axelar"
     }
   },
   {
@@ -263,6 +485,12 @@
     "chain": {
       "name": "Ethereum",
       "id": 1
+    },
+    "identifiers": {
+      "axelarId": "UMEE"
+    },
+    "bridge": {
+      "name": "Axelar"
     }
   },
   {
@@ -270,6 +498,12 @@
     "chain": {
       "name": "Ethereum",
       "id": 1
+    },
+    "identifiers": {
+      "axelarId": "ERN"
+    },
+    "bridge": {
+      "name": "Axelar"
     }
   },
   {
@@ -277,6 +511,12 @@
     "chain": {
       "name": "Ethereum",
       "id": 1
+    },
+    "identifiers": {
+      "axelarId": "axlLqdr"
+    },
+    "bridge": {
+      "name": "Axelar"
     }
   },
   {
@@ -284,6 +524,12 @@
     "chain": {
       "name": "Ethereum",
       "id": 1
+    },
+    "identifiers": {
+      "axelarId": "WDOGE"
+    },
+    "bridge": {
+      "name": "Axelar"
     }
   },
   {
@@ -291,6 +537,12 @@
     "chain": {
       "name": "Ethereum",
       "id": 1
+    },
+    "identifiers": {
+      "axelarId": "POLS"
+    },
+    "bridge": {
+      "name": "Axelar"
     }
   },
   {
@@ -298,6 +550,12 @@
     "chain": {
       "name": "Ethereum",
       "id": 1
+    },
+    "identifiers": {
+      "axelarId": "ORBS"
+    },
+    "bridge": {
+      "name": "Axelar"
     }
   },
   {
@@ -305,6 +563,12 @@
     "chain": {
       "name": "Ethereum",
       "id": 1
+    },
+    "identifiers": {
+      "axelarId": "KNC"
+    },
+    "bridge": {
+      "name": "Axelar"
     }
   },
   {
@@ -312,6 +576,12 @@
     "chain": {
       "name": "Ethereum",
       "id": 1
+    },
+    "identifiers": {
+      "axelarId": "OATH"
+    },
+    "bridge": {
+      "name": "Axelar"
     }
   },
   {
@@ -319,6 +589,12 @@
     "chain": {
       "name": "Ethereum",
       "id": 1
+    },
+    "identifiers": {
+      "axelarId": "GDX"
+    },
+    "bridge": {
+      "name": "Axelar"
     }
   },
   {
@@ -326,6 +602,12 @@
     "chain": {
       "name": "Ethereum",
       "id": 1
+    },
+    "identifiers": {
+      "axelarId": "axlDEUS"
+    },
+    "bridge": {
+      "name": "Axelar"
     }
   },
   {
@@ -333,6 +615,12 @@
     "chain": {
       "name": "Ethereum",
       "id": 1
+    },
+    "identifiers": {
+      "axelarId": "stERN"
+    },
+    "bridge": {
+      "name": "Axelar"
     }
   }
 ]
