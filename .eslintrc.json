@@ -21,6 +21,7 @@
   "rules": {
     "@typescript-eslint/prefer-readonly": ["error"],
     "@typescript-eslint/ban-tslint-comment": "off",
+    "@typescript-eslint/ban-types": "off",
     "@typescript-eslint/explicit-module-boundary-types": "off",
     "@typescript-eslint/no-extra-semi": "off",
     "@typescript-eslint/no-empty-function": "off",

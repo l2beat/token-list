@@ -5,6 +5,7 @@
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "scripts": {
+    "start": "node -r esbuild-register src/index.ts",
     "build": "tsc",
     "clean": "rm -rf build",
     "format:fix": "prettier --write .",
@@ -31,5 +32,11 @@
     "prettier": "^3.0.3",
     "typescript": "^5.2.2",
     "wait-for-expect": "^3.0.2"
+  },
+  "dependencies": {
+    "@types/lodash": "^4.14.197",
+    "lodash": "^4.17.21",
+    "viem": "^1.10.1",
+    "zod": "^3.22.2"
   }
 }

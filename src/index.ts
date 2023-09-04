@@ -1,3 +1,11 @@
-import { add } from './add'
+import { Application } from './Application'
 
-console.log(add(1, 2))
+main().catch((e) => {
+  console.error(e)
+  process.exit(1)
+})
+
+async function main() {
+  const app = new Application()
+  await app.start()
+}
