@@ -4,6 +4,7 @@ import { getAddress } from 'viem'
 import { z } from 'zod'
 
 import { Address } from '../Address'
+import { chains } from '../chains'
 import { TokenSource } from '../pipeline/TokenSource'
 import { TokenListing } from '../TokenListing'
 
@@ -22,12 +23,12 @@ export class CoingeckoSource implements TokenSource {
     const listings: TokenListing[] = []
 
     for (const token of parsed) {
-      for (const platform of platforms) {
-        const address = token.platforms?.[platform.id]
+      for (const chain of chains) {
+        const address = token.platforms?.[chain.id]
         if (address) {
           listings.push({
-            address: Address(`${platform.chainPrefix}:${getAddress(address)}`),
-            chain: { name: platform.chainName, id: platform.chainId },
+            address: Address(`${chain.prefix}:${getAddress(address)}`),
+            chain: { name: chain.name, id: chain.id },
             identifiers: { coingeckoId: token.id },
           })
         }
@@ -39,33 +40,6 @@ export class CoingeckoSource implements TokenSource {
     return listings
   }
 }
-
-const platforms = [
-  {
-    id: 'ethereum',
-    chainPrefix: 'eth',
-    chainName: 'Ethereum',
-    chainId: 1,
-  },
-  {
-    id: 'optimistic-ethereum',
-    chainPrefix: 'op',
-    chainName: 'OP Mainnet',
-    chainId: 10,
-  },
-  {
-    id: 'arbitrum-one',
-    chainPrefix: 'arb',
-    chainName: 'Arbitrum One',
-    chainId: 42161,
-  },
-  // {
-  //   id: 'polygon-zkevm',
-  //   chainPrefix: 'polygon-zkevm',
-  //   chainName: 'Polygon zkEVM',
-  //   chainId: 1101,
-  // },
-]
 
 const CoingeckoResponse = z.array(
   z.object({

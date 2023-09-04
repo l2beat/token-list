@@ -6,11 +6,12 @@ import { z } from 'zod'
 
 import { Address } from '../Address'
 import { Cache } from '../cache/Cache'
+import { TokenSource } from '../pipeline/TokenSource'
 import { TokenListing } from '../TokenListing'
 
 type Deployment = TokenListing['deployment']
 
-export class DeploymentSource {
+export class DeploymentSource implements TokenSource {
   private readonly cache: Cache<Deployment>
 
   constructor(

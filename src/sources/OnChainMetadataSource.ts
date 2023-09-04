@@ -2,6 +2,7 @@ import { Logger } from '@l2beat/backend-tools'
 import { getContract, parseAbiItem, PublicClient } from 'viem'
 
 import { Address } from '../Address'
+import { TokenSource } from '../pipeline/TokenSource'
 import { TokenListing } from '../TokenListing'
 
 const abi = [
@@ -10,7 +11,7 @@ const abi = [
   parseAbiItem('function decimals() view returns (uint)'),
 ]
 
-export class OnChainMetadataSource {
+export class OnChainMetadataSource implements TokenSource {
   constructor(
     private readonly publicClient: PublicClient,
     private readonly chainId: number,

@@ -24,5 +24,10 @@ export function getConfig(): Config {
         apiKey: env.string('ETHERSCAN_OPTIMISM_API_KEY'),
       },
     },
+    axelar: {
+      mainnetGateway: '0x4F4495243837681061C4743b74B3eEdf548D56A5',
+      arbitrumGateway: '0xe432150cce91c13a887f7D836923d5597adD8E31',
+      optimismGateway: '0xe432150cce91c13a887f7D836923d5597adD8E31',
+    },
   }
 }

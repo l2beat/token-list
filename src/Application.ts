@@ -1,14 +1,17 @@
 import { Logger } from '@l2beat/backend-tools'
 import { writeFile } from 'fs/promises'
-import { PublicClient, createPublicClient, http } from 'viem'
+import { createPublicClient, http, PublicClient } from 'viem'
 import { arbitrum, mainnet, optimism } from 'viem/chains'
+import { z } from 'zod'
 
 import { Config } from './config/Config'
 import { SourcePipeline } from './pipeline/SourcePipeline'
+import { AxelarSource } from './sources/AxelarSource'
 import { CoingeckoSource } from './sources/CoingeckoSource'
 import { DeploymentSource } from './sources/DeploymentSource'
 import { JsonSource } from './sources/JsonSource'
 import { OnChainMetadataSource } from './sources/OnChainMetadataSource'
+import { TokenListing } from './TokenListing'
 
 export class Application {
   start: () => Promise<void>
@@ -47,8 +50,31 @@ export class Application {
 
     const pipeline = new SourcePipeline()
       .add(new JsonSource('tokens.json', logger))
-      .add(new JsonSource('data/axelar-ethereum.json', logger))
       .add(new CoingeckoSource(logger))
+      .add(
+        new AxelarSource(
+          mainnetClient,
+          mainnet.id,
+          config.axelar.mainnetGateway,
+          logger.tag('mainnet'),
+        ),
+      )
+      .add(
+        new AxelarSource(
+          arbitrumClient,
+          arbitrum.id,
+          config.axelar.arbitrumGateway,
+          logger.tag('arbitrum'),
+        ),
+      )
+      .add(
+        new AxelarSource(
+          optimismClient,
+          optimism.id,
+          config.axelar.optimismGateway,
+          logger.tag('optimism'),
+        ),
+      )
       .merge()
       .add(
         new OnChainMetadataSource(
@@ -101,7 +127,9 @@ export class Application {
 
     this.start = async () => {
       const tokens = await pipeline.getTokens()
-      await writeFile('tokens.json', JSON.stringify(tokens, null, 2))
+      // We need this to enforce a consistent property order
+      const data = z.array(TokenListing).parse(tokens)
+      await writeFile('tokens.json', JSON.stringify(data, null, 2))
     }
   }
 }

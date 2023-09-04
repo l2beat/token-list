@@ -18,4 +18,9 @@ export interface Config {
       apiKey: string
     }
   }
+  axelar: {
+    mainnetGateway: `0x${string}`
+    arbitrumGateway: `0x${string}`
+    optimismGateway: `0x${string}`
+  }
 }
