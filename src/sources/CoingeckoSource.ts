@@ -4,14 +4,17 @@ import { getAddress } from 'viem'
 import { z } from 'zod'
 
 import { Address } from '../Address'
-import { chains } from '../chains'
+import { ChainConfig } from '../config/Config'
 import { TokenSource } from '../pipeline/TokenSource'
 import { TokenListing } from '../TokenListing'
 
 const URL = 'https://api.coingecko.com/api/v3/coins/list?include_platform=true'
 
 export class CoingeckoSource implements TokenSource {
-  constructor(private readonly logger: Logger) {
+  constructor(
+    private readonly logger: Logger,
+    private readonly chains: ChainConfig[],
+  ) {
     this.logger = logger.for(this)
   }
 
@@ -23,8 +26,11 @@ export class CoingeckoSource implements TokenSource {
     const listings: TokenListing[] = []
 
     for (const token of parsed) {
-      for (const chain of chains) {
-        const address = token.platforms?.[chain.id]
+      for (const chain of this.chains) {
+        if (!chain.coingeckoId) {
+          continue
+        }
+        const address = token.platforms?.[chain.coingeckoId]
         if (address) {
           listings.push({
             address: Address(`${chain.prefix}:${getAddress(address)}`),

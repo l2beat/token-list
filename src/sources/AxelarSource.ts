@@ -2,14 +2,14 @@ import { Logger } from '@l2beat/backend-tools'
 import { parseAbiItem, PublicClient } from 'viem'
 
 import { Address } from '../Address'
-import { getChain } from '../chains'
+import { ChainConfig } from '../config/Config'
 import { TokenSource } from '../pipeline/TokenSource'
 import { TokenListing } from '../TokenListing'
 
 export class AxelarSource implements TokenSource {
   constructor(
     private readonly client: PublicClient,
-    private readonly chainId: number,
+    private readonly chain: Pick<ChainConfig, 'id' | 'prefix' | 'name'>,
     private readonly gatewayAddress: `0x${string}`,
     private readonly logger: Logger,
   ) {
@@ -28,11 +28,10 @@ export class AxelarSource implements TokenSource {
 
     this.logger.info('Got logs', { length: logs.length })
 
-    const chain = getChain(this.chainId)
     return logs.map(
       (log): TokenListing => ({
-        address: Address(`${chain.prefix}:${log.args.tokenAddresses}`),
-        chain: { id: chain.id, name: chain.name },
+        address: Address(`${this.chain.prefix}:${log.args.tokenAddresses}`),
+        chain: { id: this.chain.id, name: this.chain.name },
         identifiers: { axelarId: log.args.symbol },
       }),
     )

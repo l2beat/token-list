@@ -1,26 +1,18 @@
+import { Chain } from 'viem'
+
+export interface ChainConfig {
+  name: string
+  id: number
+  tag: string
+  prefix: string
+  viemChain?: Chain
+  coingeckoId?: string
+  jsonRpcUrl?: string
+  etherscanApiUrl?: string
+  etherscanApiKey?: string
+  axelarGateway?: `0x${string}`
+}
+
 export interface Config {
-  jsonRpc: {
-    mainnetUrl: string
-    arbitrumUrl: string
-    optimismUrl: string
-  }
-  etherscan: {
-    mainnet: {
-      apiUrl: string
-      apiKey: string
-    }
-    arbitrum: {
-      apiUrl: string
-      apiKey: string
-    }
-    optimism: {
-      apiUrl: string
-      apiKey: string
-    }
-  }
-  axelar: {
-    mainnetGateway: `0x${string}`
-    arbitrumGateway: `0x${string}`
-    optimismGateway: `0x${string}`
-  }
+  chains: ChainConfig[]
 }
