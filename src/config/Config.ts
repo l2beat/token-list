@@ -1,5 +1,11 @@
 import { Chain } from 'viem'
 
+export interface Config {
+  tokenFile: string
+  chains: ChainConfig[]
+  tokenLists: TokenListConfig[]
+}
+
 export interface ChainConfig {
   name: string
   id: number
@@ -13,7 +19,7 @@ export interface ChainConfig {
   axelarGateway?: `0x${string}`
 }
 
-export interface Config {
-  tokenFile: string
-  chains: ChainConfig[]
+export interface TokenListConfig {
+  tag: string
+  url: string
 }

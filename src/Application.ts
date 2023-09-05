@@ -10,6 +10,7 @@ import { CoingeckoSource } from './sources/CoingeckoSource'
 import { DeploymentSource } from './sources/DeploymentSource'
 import { JsonSource } from './sources/JsonSource'
 import { OnChainMetadataSource } from './sources/OnChainMetadataSource'
+import { TokenListSource } from './sources/TokenListSource'
 
 export class Application {
   start: () => Promise<void>
@@ -34,6 +35,17 @@ export class Application {
       if (axelarSource) {
         pipeline.add(axelarSource)
       }
+    }
+
+    for (const list of config.tokenLists) {
+      pipeline.add(
+        new TokenListSource(
+          list.url,
+          list.tag,
+          logger.tag(list.tag),
+          config.chains,
+        ),
+      )
     }
 
     pipeline.merge()

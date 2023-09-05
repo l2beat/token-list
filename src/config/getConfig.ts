@@ -45,5 +45,11 @@ export function getConfig(): Config {
         axelarGateway: '0xe432150cce91c13a887f7D836923d5597adD8E31',
       },
     ],
+    tokenLists: [
+      {
+        tag: '1inch',
+        url: 'https://tokens.1inch.eth.link',
+      },
+    ],
   }
 }

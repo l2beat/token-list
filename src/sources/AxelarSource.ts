@@ -32,7 +32,7 @@ export class AxelarSource implements TokenSource {
       (log): TokenListing => ({
         address: Address(`${this.chain.prefix}:${log.args.tokenAddresses}`),
         chain: { id: this.chain.id, name: this.chain.name },
-        identifiers: { axelarId: log.args.symbol },
+        identifiers: { axelarSymbol: log.args.symbol },
       }),
     )
   }

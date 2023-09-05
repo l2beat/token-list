@@ -6,7 +6,7 @@ export class AxelarHeuristicSource implements TokenSource {
     knownTokens: readonly TokenListing[],
   ): Promise<TokenListing[]> {
     const fromAxelar = knownTokens.filter(
-      (token) => token.identifiers?.axelarId,
+      (token) => token.identifiers?.axelarSymbol,
     )
 
     const results: TokenListing[] = []
