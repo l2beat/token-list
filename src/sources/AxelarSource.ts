@@ -28,12 +28,15 @@ export class AxelarSource implements TokenSource {
 
     this.logger.info('Got logs', { length: logs.length })
 
-    return logs.map(
-      (log): TokenListing => ({
+    return logs.map((log): TokenListing => {
+      const listing: TokenListing = {
         address: Address(`${this.chain.prefix}:${log.args.tokenAddresses}`),
         chain: { id: this.chain.id, name: this.chain.name },
-        identifiers: { axelarSymbol: log.args.symbol },
-      }),
-    )
+      }
+      if (log.args.symbol) {
+        listing.identifiers = { axelarSymbol: log.args.symbol }
+      }
+      return listing
+    })
   }
 }
