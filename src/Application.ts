@@ -62,7 +62,7 @@ export class Application {
 
     pipeline.merge()
 
-    pipeline.add(new AxelarHeuristicSource())
+    pipeline.add(new AxelarHeuristicSource(logger))
 
     // #endregion
 
