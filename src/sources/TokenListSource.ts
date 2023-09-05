@@ -1,5 +1,6 @@
 import { Logger } from '@l2beat/backend-tools'
 import fetch from 'node-fetch'
+import { getAddress } from 'viem'
 import { z } from 'zod'
 
 import { Address } from '../Address'
@@ -30,7 +31,7 @@ export class TokenListSource implements TokenSource {
       }
 
       const listing: TokenListing = {
-        address: Address(`${chain.prefix}:${token.address}`),
+        address: Address(`${chain.prefix}:${getAddress(token.address)}`),
         chain: {
           id: chain.id,
           name: chain.name,

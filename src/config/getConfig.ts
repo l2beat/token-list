@@ -50,6 +50,18 @@ export function getConfig(): Config {
         tag: '1inch',
         url: 'https://tokens.1inch.eth.link',
       },
+      {
+        tag: 'aave',
+        url: 'http://tokenlist.aave.eth.link',
+      },
+      {
+        tag: 'mycrypto',
+        url: 'https://uniswap.mycryptoapi.com/',
+      },
+      {
+        tag: 'superchain',
+        url: 'https://static.optimism.io/optimism.tokenlist.json',
+      },
     ],
   }
 }

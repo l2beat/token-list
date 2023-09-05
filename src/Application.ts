@@ -11,6 +11,7 @@ import { DeploymentSource } from './sources/DeploymentSource'
 import { JsonSource } from './sources/JsonSource'
 import { OnChainMetadataSource } from './sources/OnChainMetadataSource'
 import { TokenListSource } from './sources/TokenListSource'
+import { Stats } from './Stats'
 
 export class Application {
   start: () => Promise<void>
@@ -65,10 +66,12 @@ export class Application {
 
     // #endregion
 
+    const stats = new Stats(logger, config.chains)
     const output = new Output(config.tokenFile)
 
     this.start = async () => {
       const tokens = await pipeline.getTokens()
+      stats.outputStats(tokens)
       await output.write(tokens)
     }
   }
