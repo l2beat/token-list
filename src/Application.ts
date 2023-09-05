@@ -73,6 +73,14 @@ export class Application {
       const tokens = await pipeline.getTokens()
       stats.outputStats(tokens)
       await output.write(tokens)
+
+      // TODO: temporary
+      const axelarOutput = new Output('axelar.json')
+      const axelarTokens = tokens.filter(
+        (token) => token.tags?.includes('axelar'),
+      )
+      await axelarOutput.write(axelarTokens)
+      stats.outputStats(axelarTokens)
     }
   }
 }
@@ -115,6 +123,7 @@ function getChainSources(config: Config, logger: Logger) {
       deploymentSource = new DeploymentSource(
         chain.etherscanApiUrl,
         chain.etherscanApiKey,
+        !!chain.skipDeploymentTransaction,
         client,
         chain.id,
         logger.tag(chain.tag),

@@ -17,6 +17,7 @@ export class DeploymentSource implements TokenSource {
   constructor(
     private readonly apiUrl: string,
     private readonly apiKey: string,
+    private readonly skipDeploymentTransaction: boolean,
     private readonly publicClient: PublicClient,
     private readonly chainId: number,
     private readonly logger: Logger,
@@ -76,7 +77,9 @@ export class DeploymentSource implements TokenSource {
 
   private async getDeployment(address: `0x${string}`): Promise<Deployment> {
     const source = await this.getContractSource(address)
-    const deployment = await this.getContractDeployment(address)
+    const deployment = !this.skipDeploymentTransaction
+      ? await this.getContractDeployment(address)
+      : undefined
 
     if (deployment?.txHash.startsWith('GENESIS')) {
       return {
@@ -97,7 +100,7 @@ export class DeploymentSource implements TokenSource {
       }))
 
     return {
-      isEOA: deployment ? undefined : true,
+      isEOA: deployment || this.skipDeploymentTransaction ? undefined : true,
       contractName: source?.ContractName ? source.ContractName : undefined,
       transactionHash: deployment?.txHash,
       blockNumber: tx && Number(tx.blockNumber),

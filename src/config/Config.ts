@@ -16,6 +16,7 @@ export interface ChainConfig {
   jsonRpcUrl?: string
   etherscanApiUrl?: string
   etherscanApiKey?: string
+  skipDeploymentTransaction?: boolean
   axelarGateway?: `0x${string}`
 }
 

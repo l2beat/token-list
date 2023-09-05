@@ -7,3 +7,4 @@ build
 .env
 cache
 !src/cache
+axelar.json

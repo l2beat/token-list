@@ -10,7 +10,7 @@ export function Address(value: string): Address {
   }
   const [chainPrefix, address] = value.split(':')
 
-  if (!chainPrefix || !isValidChainPrefix(chainPrefix)) {
+  if (!chainPrefix) {
     throw new Error(`Invalid chain prefix: ${chainPrefix}`)
   }
 
@@ -30,21 +30,14 @@ Address.isAddress = function isAddress(value: unknown): value is Address {
   }
 }
 
-Address.getPrefix = function getPrefix(tokenAddress: Address): ChainPrefix {
-  return tokenAddress.split(':')[0] as ChainPrefix
+Address.getPrefix = function getPrefix(tokenAddress: Address): string {
+  return tokenAddress.split(':')[0] as string
 }
 
 Address.getRawAddress = function getRawAddress(
   tokenAddress: Address,
 ): `0x${string}` {
   return tokenAddress.split(':')[1] as `0x${string}`
-}
-
-const ALLOWED_CHAIN_PREFIXES = ['eth', 'arb', 'op', 'polygon-zkevm'] as const
-export type ChainPrefix = (typeof ALLOWED_CHAIN_PREFIXES)[number]
-
-export function isValidChainPrefix(value: string): value is ChainPrefix {
-  return (ALLOWED_CHAIN_PREFIXES as readonly string[]).includes(value)
 }
 
 function isChecksumAddress(address: string): boolean {
