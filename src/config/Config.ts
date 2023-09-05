@@ -14,5 +14,6 @@ export interface ChainConfig {
 }
 
 export interface Config {
+  tokenFile: string
   chains: ChainConfig[]
 }

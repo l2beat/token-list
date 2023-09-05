@@ -6,6 +6,7 @@ import { Config } from './Config'
 export function getConfig(): Config {
   const env = getEnv()
   return {
+    tokenFile: 'tokens.json',
     chains: [
       {
         id: 1,
