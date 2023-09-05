@@ -43,12 +43,14 @@ export class AxelarHeuristicSource implements TokenSource {
 
         if (sourceTokens.length === 0) {
           this.logger.warn('Missing source token', {
+            address: token.address,
             axelarSymbol: token.identifiers?.axelarSymbol,
           })
         }
 
         if (sourceTokens.length > 1) {
           this.logger.error('Too many source tokens', {
+            address: token.address,
             axelarSymbol: token.identifiers?.axelarSymbol,
             sourceTokens: sourceTokens.map((token) => token.address),
           })
