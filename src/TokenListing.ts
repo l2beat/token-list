@@ -17,7 +17,7 @@ export const TokenListing = z.strictObject({
   name: z.string().optional(),
   symbol: z.string().optional(),
   chain: Chain.optional(),
-  tags: z.array(z.string()).optional(),
+  tags: z.record(z.literal(true)).optional(),
   onChainMetadata: z
     .strictObject({
       name: z.string().optional(),
@@ -52,17 +52,10 @@ export function mergeListings(listings: TokenListing[][]): TokenListing[] {
     const existing = merged.get(listing.address)
     if (existing) {
       const result = merge({}, existing, listing)
-      result.tags = mergeTags(existing.tags, listing.tags)
       merged.set(listing.address, result)
     } else {
       merged.set(listing.address, listing)
     }
   }
   return [...merged.values()]
-}
-
-// Example: ['a', 'b'] + ['c', 'a'] = ['a', 'b', 'c']
-function mergeTags(tags1: string[] = [], tags2: string[] = []) {
-  const tags = [...new Set([...tags1, ...tags2])].sort()
-  return tags.length > 0 ? tags : undefined
 }

@@ -32,8 +32,8 @@ export class AxelarSource implements TokenSource {
       const listing: TokenListing = {
         address: Address(`${this.chain.prefix}:${log.args.tokenAddresses}`),
         chain: { id: this.chain.id, name: this.chain.name },
+        tags: { axelar: true },
       }
-      listing.tags = ['axelar']
       if (log.args.symbol) {
         listing.identifiers = { axelarSymbol: log.args.symbol }
       }

@@ -4,7 +4,6 @@ import { createPublicClient, http, PublicClient } from 'viem'
 import { Config } from './config/Config'
 import { Output } from './Output'
 import { SourcePipeline } from './pipeline/SourcePipeline'
-import { AxelarHeuristicSource } from './sources/AxelarHeuristicSource'
 import { AxelarSource } from './sources/AxelarSource'
 import { CoingeckoSource } from './sources/CoingeckoSource'
 import { DeploymentSource } from './sources/DeploymentSource'
@@ -12,6 +11,7 @@ import { JsonSource } from './sources/JsonSource'
 import { OnChainMetadataSource } from './sources/OnChainMetadataSource'
 import { TokenListSource } from './sources/TokenListSource'
 import { Stats } from './Stats'
+import { AxelarHeuristic } from './transformers/AxelarHeuristic'
 
 export class Application {
   start: () => Promise<void>
@@ -61,8 +61,7 @@ export class Application {
     }
 
     pipeline.merge()
-
-    pipeline.add(new AxelarHeuristicSource(logger))
+    pipeline.transform(new AxelarHeuristic(logger))
 
     // #endregion
 
@@ -76,9 +75,7 @@ export class Application {
 
       // TODO: temporary
       const axelarOutput = new Output('axelar.json')
-      const axelarTokens = tokens.filter(
-        (token) => token.tags?.includes('axelar'),
-      )
+      const axelarTokens = tokens.filter((token) => token.tags?.axelar)
       await axelarOutput.write(axelarTokens)
       stats.outputStats(axelarTokens)
     }
