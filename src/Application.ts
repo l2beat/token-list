@@ -4,14 +4,14 @@ import { createPublicClient, http, PublicClient } from 'viem'
 import { Config } from './config/Config'
 import { Output } from './Output'
 import { SourcePipeline } from './pipeline/SourcePipeline'
-import { AxelarSource } from './sources/AxelarSource'
+import { AxelarConfigSource } from './sources/AxelarConfigSource'
+import { AxelarGatewaySource } from './sources/AxelarGatewaySource'
 import { CoingeckoSource } from './sources/CoingeckoSource'
 import { DeploymentSource } from './sources/DeploymentSource'
 import { JsonSource } from './sources/JsonSource'
 import { OnChainMetadataSource } from './sources/OnChainMetadataSource'
 import { TokenListSource } from './sources/TokenListSource'
 import { Stats } from './Stats'
-import { AxelarHeuristic } from './transformers/AxelarHeuristic'
 
 export class Application {
   start: () => Promise<void>
@@ -31,6 +31,9 @@ export class Application {
 
     pipeline.add(new JsonSource(config.tokenFile, logger))
     pipeline.add(new CoingeckoSource(logger, config.chains))
+    pipeline.add(
+      new AxelarConfigSource(logger, config.axelarConfig, config.chains),
+    )
 
     for (const { axelarSource } of chainSources) {
       if (axelarSource) {
@@ -61,7 +64,7 @@ export class Application {
     }
 
     pipeline.merge()
-    pipeline.transform(new AxelarHeuristic(logger))
+    // pipeline.transform(new AxelarHeuristic(logger))
 
     // #endregion
 
@@ -74,10 +77,18 @@ export class Application {
       await output.write(tokens)
 
       // TODO: temporary
-      const axelarOutput = new Output('axelar.json')
-      const axelarTokens = tokens.filter((token) => token.tags?.axelar)
-      await axelarOutput.write(axelarTokens)
-      stats.outputStats(axelarTokens)
+      const axelarTokens = tokens
+        .filter(
+          (token) => token.tags?.axelarBridged && token.chain?.name === 'Base',
+        )
+        .map((token) => ({
+          symbol: token.onChainMetadata?.symbol,
+          sourceChain: token.bridge?.sourceChainRaw,
+          address: token.address,
+          sourceToken: token.bridge?.sourceTokenRaw,
+        }))
+
+      console.table(axelarTokens)
     }
   }
 }
@@ -85,7 +96,7 @@ export class Application {
 function getChainSources(config: Config, logger: Logger) {
   return config.chains.map((chain) => {
     let client: PublicClient | undefined
-    let axelarSource: AxelarSource | undefined
+    let axelarSource: AxelarGatewaySource | undefined
     let onChainMetadataSource: OnChainMetadataSource | undefined
     let deploymentSource: DeploymentSource | undefined
 
@@ -100,7 +111,7 @@ function getChainSources(config: Config, logger: Logger) {
     }
 
     if (client && chain.axelarGateway) {
-      axelarSource = new AxelarSource(
+      axelarSource = new AxelarGatewaySource(
         client,
         chain,
         chain.axelarGateway,
