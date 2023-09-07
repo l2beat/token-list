@@ -17,6 +17,16 @@ import { Config } from './Config'
 export function getConfig(): Config {
   const env = getEnv()
   return {
+    sources: {
+      coingecko: true,
+      axelarConfig: true,
+      axelarGateway: true,
+      wormhole: true,
+      orbit: true,
+      tokenLists: true,
+      onChainMetadata: true,
+      deployments: true,
+    },
     tokenFile: 'tokens.json',
     chains: [
       {

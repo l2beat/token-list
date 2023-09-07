@@ -35,41 +35,64 @@ export class Application {
     const pipeline = new SourcePipeline()
 
     pipeline.add(new JsonSource(config.tokenFile, logger))
-    pipeline.add(new CoingeckoSource(logger, config.chains))
-    pipeline.add(
-      new AxelarConfigSource(logger, config.axelarListUrl, config.chains),
-    )
-    pipeline.add(
-      new WormholeSource(config.wormholeListUrl, logger, config.chains),
-    )
-    pipeline.add(new OrbitSource(config.orbitListUrl, logger, config.chains))
 
-    for (const { axelarSource } of chainSources) {
-      if (axelarSource) {
-        pipeline.add(axelarSource)
+    if (config.sources.coingecko) {
+      pipeline.add(new CoingeckoSource(logger, config.chains))
+    }
+
+    if (config.sources.axelarConfig) {
+      pipeline.add(
+        new AxelarConfigSource(logger, config.axelarListUrl, config.chains),
+      )
+    }
+
+    if (config.sources.axelarGateway) {
+      for (const { axelarSource } of chainSources) {
+        if (axelarSource) {
+          pipeline.add(axelarSource)
+        }
       }
     }
 
-    for (const list of config.tokenLists) {
+    if (config.sources.wormhole) {
       pipeline.add(
-        new TokenListSource(
-          list.url,
-          list.tag,
-          logger.tag(list.tag),
-          config.chains,
-        ),
+        new WormholeSource(config.wormholeListUrl, logger, config.chains),
       )
+    }
+
+    if (config.sources.orbit) {
+      pipeline.add(new OrbitSource(config.orbitListUrl, logger, config.chains))
+    }
+
+    if (config.sources.tokenLists) {
+      for (const list of config.tokenLists) {
+        pipeline.add(
+          new TokenListSource(
+            list.url,
+            list.tag,
+            logger.tag(list.tag),
+            config.chains,
+          ),
+        )
+      }
     }
 
     pipeline.merge()
     pipeline.transform(new ChainTransformer(logger, config.chains))
 
-    for (const sources of chainSources) {
-      if (sources.onChainMetadataSource) {
-        pipeline.add(sources.onChainMetadataSource)
+    if (config.sources.onChainMetadata) {
+      for (const sources of chainSources) {
+        if (sources.onChainMetadataSource) {
+          pipeline.add(sources.onChainMetadataSource)
+        }
       }
-      if (sources.deploymentSource) {
-        pipeline.add(sources.deploymentSource)
+    }
+
+    if (config.sources.deployments) {
+      for (const sources of chainSources) {
+        if (sources.deploymentSource) {
+          pipeline.add(sources.deploymentSource)
+        }
       }
     }
 
@@ -86,20 +109,6 @@ export class Application {
       const tokens = await pipeline.getTokens()
       stats.outputStats(tokens)
       await output.write(tokens)
-
-      // let filteredTokens = tokens
-      //   .filter(
-      //     (token) => token.chain?.name === 'Arbitrum One' && !token.bridge,
-      //   )
-      //   .filter((token) => token.deployment?.to !== undefined)
-      //   .map((token) => ({
-      //     symbol: token.onChainMetadata?.symbol,
-      //     contract: token.deployment?.contractName,
-      //     address: token.address,
-      //     to: token.deployment?.to,
-      //   }))
-      // filteredTokens = sortBy(filteredTokens, ['to', 'symbol'])
-      // console.table(filteredTokens)
     }
   }
 }

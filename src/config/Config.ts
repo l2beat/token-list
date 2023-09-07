@@ -1,6 +1,16 @@
 import { Chain } from 'viem'
 
 export interface Config {
+  sources: {
+    coingecko: boolean
+    axelarConfig: boolean
+    axelarGateway: boolean
+    wormhole: boolean
+    orbit: boolean
+    tokenLists: boolean
+    onChainMetadata: boolean
+    deployments: boolean
+  }
   tokenFile: string
   chains: ChainConfig[]
   tokenLists: TokenListConfig[]
