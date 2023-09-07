@@ -39,13 +39,25 @@ export class Stats {
     }
     stats.byBridge = byBridge
 
+    const years = new Set<string>()
+    for (const token of tokens) {
+      const year = token.deployment?.timestamp?.slice(0, 4)
+      if (year) {
+        years.add(year)
+      }
+    }
+    const byYear: Record<string, unknown> = {}
+    for (const year of years) {
+      const yearTokens = count(
+        tokens,
+        (token) => token.deployment?.timestamp?.slice(0, 4) === year,
+      )
+      byYear[year] = yearTokens
+    }
+    stats.byYear = byYear
+
     stats.withImages = count(tokens, (token) => !!token.images)
     stats.eoas = count(tokens, (token) => !!token.deployment?.isEOA)
-    const currentYear = new Date().getFullYear().toString()
-    stats[`from${currentYear}`] = count(
-      tokens,
-      (token) => !!token.deployment?.timestamp?.startsWith(currentYear),
-    )
 
     this.logger.info('Stats', stats)
   }

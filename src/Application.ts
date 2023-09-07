@@ -10,6 +10,7 @@ import { CoingeckoSource } from './sources/CoingeckoSource'
 import { DeploymentSource } from './sources/DeploymentSource'
 import { JsonSource } from './sources/JsonSource'
 import { OnChainMetadataSource } from './sources/OnChainMetadataSource'
+import { OrbitSource } from './sources/OrbitSource'
 import { TokenListSource } from './sources/TokenListSource'
 import { WormholeSource } from './sources/WormholeSource'
 import { Stats } from './Stats'
@@ -41,6 +42,7 @@ export class Application {
     pipeline.add(
       new WormholeSource(config.wormholeListUrl, logger, config.chains),
     )
+    pipeline.add(new OrbitSource(config.orbitListUrl, logger, config.chains))
 
     for (const { axelarSource } of chainSources) {
       if (axelarSource) {

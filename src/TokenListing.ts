@@ -41,6 +41,7 @@ export const TokenListing = z.strictObject({
       name: z.string(),
       sourceChain: Chain.optional(),
       sourceEscrow: AddressType.optional(),
+      sourceEscrowRaw: z.string().optional(),
       sourceToken: AddressType.optional(),
       sourceChainRaw: z.string().optional(),
       sourceTokenRaw: z.string().optional(),

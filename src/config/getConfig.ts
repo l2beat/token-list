@@ -28,6 +28,7 @@ export function getConfig(): Config {
         coingeckoId: 'ethereum',
         axelarId: 'ethereum',
         wormholeId: 'eth',
+        orbitId: 'eth',
         jsonRpcUrl: env.string('ETHEREUM_JSON_RPC_URL'),
         etherscanApiUrl: 'https://api.etherscan.io/api',
         etherscanApiKey: env.string('ETHEREUM_ETHERSCAN_API_KEY'),
@@ -70,6 +71,7 @@ export function getConfig(): Config {
         coingeckoId: 'avalanche',
         axelarId: 'avalanche',
         wormholeId: 'avax',
+        orbitId: 'avax',
         jsonRpcUrl: env.string('AVALANCHE_JSON_RPC_URL'),
         etherscanApiUrl: 'https://api.snowtrace.io/api',
         etherscanApiKey: env.string('AVALANCHE_ETHERSCAN_API_KEY'),
@@ -98,6 +100,7 @@ export function getConfig(): Config {
         coingeckoId: 'polygon-pos',
         axelarId: 'polygon',
         wormholeId: 'matic',
+        orbitId: 'matic',
         jsonRpcUrl: env.string('POLYGON_JSON_RPC_URL'),
         etherscanApiUrl: 'https://api.polygonscan.com/api',
         etherscanApiKey: env.string('POLYGON_ETHERSCAN_API_KEY'),
@@ -112,6 +115,7 @@ export function getConfig(): Config {
         coingeckoId: 'celo',
         axelarId: 'celo',
         wormholeId: 'celo',
+        orbitId: 'celo',
         jsonRpcUrl: env.string('CELO_JSON_RPC_URL'),
         etherscanApiUrl: 'https://api.celoscan.io/api',
         etherscanApiKey: env.string('CELO_ETHERSCAN_API_KEY'),
@@ -178,5 +182,6 @@ export function getConfig(): Config {
       'https://axelar-mainnet.s3.us-east-2.amazonaws.com/mainnet-asset-config.json',
     wormholeListUrl:
       'https://raw.githubusercontent.com/wormhole-foundation/wormhole-token-list/main/content/by_source.csv',
+    orbitListUrl: 'https://bridge.orbitchain.io/open/v1/api/tokenList3',
   }
 }

@@ -6,6 +6,7 @@ export interface Config {
   tokenLists: TokenListConfig[]
   axelarListUrl: string
   wormholeListUrl: string
+  orbitListUrl: string
 }
 
 export interface ChainConfig {
@@ -17,6 +18,7 @@ export interface ChainConfig {
   coingeckoId?: string
   axelarId?: string
   wormholeId?: string
+  orbitId?: string
   jsonRpcUrl?: string
   etherscanApiUrl?: string
   etherscanApiKey?: string
