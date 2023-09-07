@@ -14,8 +14,6 @@ export const Chain = z.strictObject({
 export type TokenListing = z.infer<typeof TokenListing>
 export const TokenListing = z.strictObject({
   address: AddressType,
-  name: z.string().optional(),
-  symbol: z.string().optional(),
   chain: Chain.optional(),
   tags: z.record(z.literal(true)).optional(),
   onChainMetadata: z

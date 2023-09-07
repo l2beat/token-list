@@ -13,6 +13,7 @@ import { OnChainMetadataSource } from './sources/OnChainMetadataSource'
 import { TokenListSource } from './sources/TokenListSource'
 import { Stats } from './Stats'
 import { CanonicalArbitrumHeuristic } from './transformers/CanonicalArbitrumHeuristic'
+import { CanonicalOptimismHeuristic } from './transformers/CanonicalOptimismHeuristic'
 import { ChainTransformer } from './transformers/ChainTransformer'
 
 export class Application {
@@ -68,6 +69,7 @@ export class Application {
 
     pipeline.merge()
     pipeline.transform(new CanonicalArbitrumHeuristic())
+    pipeline.transform(new CanonicalOptimismHeuristic())
 
     // #endregion
 
@@ -78,6 +80,20 @@ export class Application {
       const tokens = await pipeline.getTokens()
       stats.outputStats(tokens)
       await output.write(tokens)
+
+      // let filteredTokens = tokens
+      //   .filter(
+      //     (token) => token.chain?.name === 'Arbitrum One' && !token.bridge,
+      //   )
+      //   .filter((token) => token.deployment?.to !== undefined)
+      //   .map((token) => ({
+      //     symbol: token.onChainMetadata?.symbol,
+      //     contract: token.deployment?.contractName,
+      //     address: token.address,
+      //     to: token.deployment?.to,
+      //   }))
+      // filteredTokens = sortBy(filteredTokens, ['to', 'symbol'])
+      // console.table(filteredTokens)
     }
   }
 }
