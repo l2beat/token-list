@@ -23,7 +23,22 @@ export class Stats {
     }
     stats.byChain = byChain
 
-    stats.withBridge = count(tokens, (token) => !!token.bridge)
+    const bridges = new Set<string>()
+    for (const token of tokens) {
+      if (token.bridge?.name) {
+        bridges.add(token.bridge.name)
+      }
+    }
+    const byBridge: Record<string, unknown> = {}
+    for (const bridge of bridges) {
+      const bridgeTokens = count(
+        tokens,
+        (token) => token.bridge?.name === bridge,
+      )
+      byBridge[bridge] = bridgeTokens
+    }
+    stats.byBridge = byBridge
+
     stats.withImages = count(tokens, (token) => !!token.images)
     stats.eoas = count(tokens, (token) => !!token.deployment?.isEOA)
     const currentYear = new Date().getFullYear().toString()

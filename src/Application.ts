@@ -12,6 +12,8 @@ import { JsonSource } from './sources/JsonSource'
 import { OnChainMetadataSource } from './sources/OnChainMetadataSource'
 import { TokenListSource } from './sources/TokenListSource'
 import { Stats } from './Stats'
+import { CanonicalArbitrumHeuristic } from './transformers/CanonicalArbitrumHeuristic'
+import { ChainTransformer } from './transformers/ChainTransformer'
 
 export class Application {
   start: () => Promise<void>
@@ -53,6 +55,7 @@ export class Application {
     }
 
     pipeline.merge()
+    pipeline.transform(new ChainTransformer(logger, config.chains))
 
     for (const sources of chainSources) {
       if (sources.onChainMetadataSource) {
@@ -64,7 +67,7 @@ export class Application {
     }
 
     pipeline.merge()
-    // pipeline.transform(new AxelarHeuristic(logger))
+    pipeline.transform(new CanonicalArbitrumHeuristic())
 
     // #endregion
 
@@ -75,20 +78,6 @@ export class Application {
       const tokens = await pipeline.getTokens()
       stats.outputStats(tokens)
       await output.write(tokens)
-
-      // TODO: temporary
-      const axelarTokens = tokens
-        .filter(
-          (token) => token.tags?.axelarBridged && token.chain?.name === 'Base',
-        )
-        .map((token) => ({
-          symbol: token.onChainMetadata?.symbol,
-          sourceChain: token.bridge?.sourceChainRaw,
-          address: token.address,
-          sourceToken: token.bridge?.sourceTokenRaw,
-        }))
-
-      console.table(axelarTokens)
     }
   }
 }

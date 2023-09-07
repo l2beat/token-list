@@ -1,7 +1,7 @@
 import { Logger } from '@l2beat/backend-tools'
 import fetch from 'node-fetch'
 import { setTimeout } from 'timers/promises'
-import { PublicClient } from 'viem'
+import { getAddress, PublicClient } from 'viem'
 import { z } from 'zod'
 
 import { Address } from '../Address'
@@ -106,6 +106,8 @@ export class DeploymentSource implements TokenSource {
       blockNumber: tx && Number(tx.blockNumber),
       timestamp:
         block && new Date(Number(block.timestamp) * 1000).toISOString(),
+      from: tx?.from ? getAddress(tx.from) : undefined,
+      to: tx?.to ? getAddress(tx.to) : undefined,
     }
   }
 
