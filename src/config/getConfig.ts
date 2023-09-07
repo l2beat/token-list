@@ -27,6 +27,7 @@ export function getConfig(): Config {
         viemChain: mainnet,
         coingeckoId: 'ethereum',
         axelarId: 'ethereum',
+        wormholeId: 'eth',
         jsonRpcUrl: env.string('ETHEREUM_JSON_RPC_URL'),
         etherscanApiUrl: 'https://api.etherscan.io/api',
         etherscanApiKey: env.string('ETHEREUM_ETHERSCAN_API_KEY'),
@@ -40,6 +41,7 @@ export function getConfig(): Config {
         viemChain: arbitrum,
         coingeckoId: 'arbitrum-one',
         axelarId: 'arbitrum',
+        wormholeId: 'arbitrum',
         jsonRpcUrl: env.string('ARBITRUM_JSON_RPC_URL'),
         etherscanApiUrl: 'https://api.arbiscan.io/api',
         etherscanApiKey: env.string('ARBITRUM_ETHERSCAN_API_KEY'),
@@ -53,6 +55,7 @@ export function getConfig(): Config {
         viemChain: optimism,
         coingeckoId: 'optimistic-ethereum',
         axelarId: 'optimism',
+        wormholeId: 'optimism',
         jsonRpcUrl: env.string('OPTIMISM_JSON_RPC_URL'),
         etherscanApiUrl: 'https://api-optimistic.etherscan.io/api',
         etherscanApiKey: env.string('OPTIMISM_ETHERSCAN_API_KEY'),
@@ -66,6 +69,7 @@ export function getConfig(): Config {
         viemChain: avalanche,
         coingeckoId: 'avalanche',
         axelarId: 'avalanche',
+        wormholeId: 'avax',
         jsonRpcUrl: env.string('AVALANCHE_JSON_RPC_URL'),
         etherscanApiUrl: 'https://api.snowtrace.io/api',
         etherscanApiKey: env.string('AVALANCHE_ETHERSCAN_API_KEY'),
@@ -79,6 +83,7 @@ export function getConfig(): Config {
         viemChain: base,
         coingeckoId: 'base',
         axelarId: 'base',
+        wormholeId: 'base',
         jsonRpcUrl: env.string('BASE_JSON_RPC_URL'),
         etherscanApiUrl: 'https://api.basescan.org/api',
         etherscanApiKey: env.string('BASE_ETHERSCAN_API_KEY'),
@@ -92,6 +97,7 @@ export function getConfig(): Config {
         viemChain: polygon,
         coingeckoId: 'polygon-pos',
         axelarId: 'polygon',
+        wormholeId: 'matic',
         jsonRpcUrl: env.string('POLYGON_JSON_RPC_URL'),
         etherscanApiUrl: 'https://api.polygonscan.com/api',
         etherscanApiKey: env.string('POLYGON_ETHERSCAN_API_KEY'),
@@ -105,6 +111,7 @@ export function getConfig(): Config {
         viemChain: celo,
         coingeckoId: 'celo',
         axelarId: 'celo',
+        wormholeId: 'celo',
         jsonRpcUrl: env.string('CELO_JSON_RPC_URL'),
         etherscanApiUrl: 'https://api.celoscan.io/api',
         etherscanApiKey: env.string('CELO_ETHERSCAN_API_KEY'),
@@ -167,8 +174,9 @@ export function getConfig(): Config {
         url: 'https://static.optimism.io/optimism.tokenlist.json',
       },
     ],
-    axelarConfig: {
-      url: 'https://axelar-mainnet.s3.us-east-2.amazonaws.com/mainnet-asset-config.json',
-    },
+    axelarListUrl:
+      'https://axelar-mainnet.s3.us-east-2.amazonaws.com/mainnet-asset-config.json',
+    wormholeListUrl:
+      'https://raw.githubusercontent.com/wormhole-foundation/wormhole-token-list/main/content/by_source.csv',
   }
 }

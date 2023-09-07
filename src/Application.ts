@@ -11,6 +11,7 @@ import { DeploymentSource } from './sources/DeploymentSource'
 import { JsonSource } from './sources/JsonSource'
 import { OnChainMetadataSource } from './sources/OnChainMetadataSource'
 import { TokenListSource } from './sources/TokenListSource'
+import { WormholeSource } from './sources/WormholeSource'
 import { Stats } from './Stats'
 import { CanonicalArbitrumHeuristic } from './transformers/CanonicalArbitrumHeuristic'
 import { CanonicalOptimismHeuristic } from './transformers/CanonicalOptimismHeuristic'
@@ -35,7 +36,10 @@ export class Application {
     pipeline.add(new JsonSource(config.tokenFile, logger))
     pipeline.add(new CoingeckoSource(logger, config.chains))
     pipeline.add(
-      new AxelarConfigSource(logger, config.axelarConfig, config.chains),
+      new AxelarConfigSource(logger, config.axelarListUrl, config.chains),
+    )
+    pipeline.add(
+      new WormholeSource(config.wormholeListUrl, logger, config.chains),
     )
 
     for (const { axelarSource } of chainSources) {

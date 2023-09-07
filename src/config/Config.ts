@@ -1,14 +1,11 @@
 import { Chain } from 'viem'
 
-export interface AxelarConfigConfig {
-  url: string
-}
-
 export interface Config {
   tokenFile: string
   chains: ChainConfig[]
   tokenLists: TokenListConfig[]
-  axelarConfig: AxelarConfigConfig
+  axelarListUrl: string
+  wormholeListUrl: string
 }
 
 export interface ChainConfig {
@@ -19,6 +16,7 @@ export interface ChainConfig {
   viemChain?: Chain
   coingeckoId?: string
   axelarId?: string
+  wormholeId?: string
   jsonRpcUrl?: string
   etherscanApiUrl?: string
   etherscanApiKey?: string

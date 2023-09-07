@@ -4,21 +4,21 @@ import { getAddress } from 'viem'
 import { z } from 'zod'
 
 import { Address } from '../Address'
-import { AxelarConfigConfig, ChainConfig } from '../config/Config'
+import { ChainConfig } from '../config/Config'
 import { TokenSource } from '../pipeline/TokenSource'
 import { TokenListing } from '../TokenListing'
 
 export class AxelarConfigSource implements TokenSource {
   constructor(
     private readonly logger: Logger,
-    private readonly config: AxelarConfigConfig,
+    private readonly url: string,
     private readonly chains: ChainConfig[],
   ) {
     this.logger = logger.for(this)
   }
 
   async getTokens(): Promise<TokenListing[]> {
-    const res = await fetch(this.config.url)
+    const res = await fetch(this.url)
     const data = await res.json()
     const parsed = ConfigResponse.parse(data)
 
@@ -26,12 +26,14 @@ export class AxelarConfigSource implements TokenSource {
 
     for (const definition of Object.values(parsed)) {
       const sourceChain = this.chains.find(
-        (c) => c.axelarId === definition.native_chain,
+        (c) => c.axelarId && c.axelarId === definition.native_chain,
       )
       const sourceToken = definition.chain_aliases[definition.native_chain]
 
       for (const [chain, token] of Object.entries(definition.chain_aliases)) {
-        const chainConfig = this.chains.find((c) => c.axelarId === chain)
+        const chainConfig = this.chains.find(
+          (c) => c.axelarId && c.axelarId === chain,
+        )
         if (!chainConfig) {
           continue
         }
