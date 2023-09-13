@@ -1,15 +1,17 @@
 import { Logger } from '@l2beat/backend-tools'
-import { createPublicClient, http, PublicClient } from 'viem'
+import { writeFile } from 'fs/promises'
+import Papa from 'papaparse'
 
 import { Config } from './config/Config'
+import { getChainSources } from './getChainSources'
 import { Output } from './Output'
 import { SourcePipeline } from './pipeline/SourcePipeline'
+import { CoingeckoRanker } from './ranking/CoingeckoRanker'
+import { TokenRanker } from './ranking/TokenRanker'
+import { TotalSupplyChecker } from './ranking/TotalSupplyChecker'
 import { AxelarConfigSource } from './sources/AxelarConfigSource'
-import { AxelarGatewaySource } from './sources/AxelarGatewaySource'
 import { CoingeckoSource } from './sources/CoingeckoSource'
-import { DeploymentSource } from './sources/DeploymentSource'
 import { JsonSource } from './sources/JsonSource'
-import { OnChainMetadataSource } from './sources/OnChainMetadataSource'
 import { OrbitSource } from './sources/OrbitSource'
 import { TokenListSource } from './sources/TokenListSource'
 import { WormholeSource } from './sources/WormholeSource'
@@ -105,65 +107,24 @@ export class Application {
     const stats = new Stats(logger, config.chains)
     const output = new Output(config.tokenFile)
 
+    const coingeckoRanker = new CoingeckoRanker(logger)
+    const totalSupplyChecker = new TotalSupplyChecker(chainSources, logger)
+    const tokenRanker = new TokenRanker(
+      coingeckoRanker,
+      totalSupplyChecker,
+      logger,
+    )
+
     this.start = async () => {
       const tokens = await pipeline.getTokens()
       stats.outputStats(tokens)
       await output.write(tokens)
+
+      if (config.rankTokens) {
+        const ranked = await tokenRanker.getRanking(tokens)
+        const csv = Papa.unparse(ranked)
+        await writeFile('ranked.csv', csv)
+      }
     }
   }
-}
-
-function getChainSources(config: Config, logger: Logger) {
-  return config.chains.map((chain) => {
-    let client: PublicClient | undefined
-    let axelarSource: AxelarGatewaySource | undefined
-    let onChainMetadataSource: OnChainMetadataSource | undefined
-    let deploymentSource: DeploymentSource | undefined
-
-    if (chain.jsonRpcUrl) {
-      client = createPublicClient({
-        chain: chain.viemChain,
-        transport: http(chain.jsonRpcUrl),
-        batch: {
-          multicall: true,
-        },
-      })
-    }
-
-    if (client && chain.axelarGateway) {
-      axelarSource = new AxelarGatewaySource(
-        client,
-        chain,
-        chain.axelarGateway,
-        logger.tag(chain.tag),
-      )
-    }
-
-    if (client) {
-      onChainMetadataSource = new OnChainMetadataSource(
-        client,
-        chain.id,
-        logger.tag(chain.tag),
-      )
-    }
-
-    if (client && chain.etherscanApiUrl && chain.etherscanApiKey) {
-      deploymentSource = new DeploymentSource(
-        chain.etherscanApiUrl,
-        chain.etherscanApiKey,
-        !!chain.skipDeploymentTransaction,
-        client,
-        chain.id,
-        logger.tag(chain.tag),
-      )
-    }
-
-    return {
-      chain,
-      client,
-      axelarSource,
-      onChainMetadataSource,
-      deploymentSource,
-    }
-  })
 }

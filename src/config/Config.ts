@@ -1,6 +1,7 @@
 import { Chain } from 'viem'
 
 export interface Config {
+  rankTokens: boolean
   sources: {
     coingecko: boolean
     axelarConfig: boolean

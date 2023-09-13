@@ -17,6 +17,7 @@ import { Config } from './Config'
 export function getConfig(): Config {
   const env = getEnv()
   return {
+    rankTokens: true,
     sources: {
       coingecko: true,
       axelarConfig: true,
