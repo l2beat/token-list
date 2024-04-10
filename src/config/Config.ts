@@ -39,8 +39,8 @@ export interface ChainConfig {
 }
 
 export interface CoingeckoConfig {
-    url: string,
-    apiKey: string
+  url: string
+  apiKey: string
 }
 
 export interface TokenListConfig {

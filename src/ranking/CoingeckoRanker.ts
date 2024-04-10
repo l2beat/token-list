@@ -13,8 +13,8 @@ export interface RankedCoingeckoToken {
 
 export class CoingeckoRanker {
   constructor(
-      private readonly config: CoingeckoConfig,
-      private readonly logger: Logger
+    private readonly config: CoingeckoConfig,
+    private readonly logger: Logger,
   ) {
     this.logger = logger.for(this)
   }
@@ -54,9 +54,11 @@ export class CoingeckoRanker {
       order: 'market_cap_desc',
       sparkline: 'false',
       locale: 'en',
-      x_cg_pro_api_key: this.config.apiKey
+      x_cg_pro_api_key: this.config.apiKey,
     })
-    const res = await fetch(`${this.config.url}/coins/markets?${options.toString()}`)
+    const res = await fetch(
+      `${this.config.url}/coins/markets?${options.toString()}`,
+    )
     if (!res.ok && res.status === 429) {
       throw new Error('Rate limited')
     }
