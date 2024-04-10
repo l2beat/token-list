@@ -14,6 +14,7 @@ export interface Config {
   }
   tokenFile: string
   chains: ChainConfig[]
+  coingecko: CoingeckoConfig
   tokenLists: TokenListConfig[]
   axelarListUrl: string
   wormholeListUrl: string
@@ -35,6 +36,11 @@ export interface ChainConfig {
   etherscanApiKey?: string
   skipDeploymentTransaction?: boolean
   axelarGateway?: `0x${string}`
+}
+
+export interface CoingeckoConfig {
+    url: string,
+    apiKey: string
 }
 
 export interface TokenListConfig {

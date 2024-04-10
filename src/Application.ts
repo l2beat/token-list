@@ -107,7 +107,7 @@ export class Application {
     const stats = new Stats(logger, config.chains)
     const output = new Output(config.tokenFile)
 
-    const coingeckoRanker = new CoingeckoRanker(logger)
+    const coingeckoRanker = new CoingeckoRanker(config.coingecko, logger)
     const totalSupplyChecker = new TotalSupplyChecker(chainSources, logger)
     const tokenRanker = new TokenRanker(
       coingeckoRanker,

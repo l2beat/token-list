@@ -2,8 +2,7 @@ import { Logger } from '@l2beat/backend-tools'
 import fetch from 'node-fetch'
 import { setTimeout } from 'timers/promises'
 import { z } from 'zod'
-
-const URL = 'https://api.coingecko.com/api/v3/coins/markets'
+import { CoingeckoConfig } from '../config/Config'
 
 export interface RankedCoingeckoToken {
   rank: number
@@ -13,7 +12,10 @@ export interface RankedCoingeckoToken {
 }
 
 export class CoingeckoRanker {
-  constructor(private readonly logger: Logger) {
+  constructor(
+      private readonly config: CoingeckoConfig,
+      private readonly logger: Logger
+  ) {
     this.logger = logger.for(this)
   }
 
@@ -52,8 +54,9 @@ export class CoingeckoRanker {
       order: 'market_cap_desc',
       sparkline: 'false',
       locale: 'en',
+      x_cg_pro_api_key: this.config.apiKey
     })
-    const res = await fetch(`${URL}?${options.toString()}`)
+    const res = await fetch(`${this.config.url}/coins/markets?${options.toString()}`)
     if (!res.ok && res.status === 429) {
       throw new Error('Rate limited')
     }
