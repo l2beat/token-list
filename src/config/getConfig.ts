@@ -171,6 +171,10 @@ export function getConfig(): Config {
       },
       // bsc: https://api.bscscan.com/api
     ],
+    coingecko: {
+      url: 'https://pro-api.coingecko.com/api/v3',
+      apiKey: env.string('COINGECKO_API_KEY'),
+    },
     tokenLists: [
       {
         tag: '1inch',
