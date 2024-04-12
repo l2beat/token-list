@@ -29,6 +29,7 @@ export function getConfig(): Config {
       deployments: true,
     },
     tokenFile: 'tokens.json',
+    compareToFile: env.optionalString('COMPARE_TO_FILE'),
     chains: [
       {
         id: 1,

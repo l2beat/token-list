@@ -2,6 +2,11 @@ import { Logger } from '@l2beat/backend-tools'
 import { writeFile } from 'fs/promises'
 import Papa from 'papaparse'
 
+import { getBaseTokens } from './comparison/getBaseTokens'
+import {
+  ComparableToken,
+  toComparableTokens,
+} from './comparison/toComparableTokens'
 import { Config } from './config/Config'
 import { getChainSources } from './getChainSources'
 import { Output } from './Output'
@@ -124,6 +129,17 @@ export class Application {
         const ranked = await tokenRanker.getRanking(tokens)
         const csv = Papa.unparse(ranked)
         await writeFile('ranked.csv', csv)
+      }
+
+      if (config.compareToFile) {
+        const baseTokens = getBaseTokens(config.compareToFile)
+        const foundTokens = toComparableTokens(tokens)
+
+        const getId = (t: ComparableToken) => `${t.chainId}-${t.address}`
+        const currentTokens = new Set(baseTokens.map((t) => getId(t)))
+        const missing = foundTokens.filter((t) => !currentTokens.has(getId(t)))
+
+        await writeFile('missing.json', JSON.stringify(missing, null, 2))
       }
     }
   }

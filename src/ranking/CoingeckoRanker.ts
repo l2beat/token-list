@@ -2,6 +2,7 @@ import { Logger } from '@l2beat/backend-tools'
 import fetch from 'node-fetch'
 import { setTimeout } from 'timers/promises'
 import { z } from 'zod'
+
 import { CoingeckoConfig } from '../config/Config'
 
 export interface RankedCoingeckoToken {

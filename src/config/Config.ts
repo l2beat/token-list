@@ -13,6 +13,7 @@ export interface Config {
     deployments: boolean
   }
   tokenFile: string
+  compareToFile?: string
   chains: ChainConfig[]
   coingecko: CoingeckoConfig
   tokenLists: TokenListConfig[]
