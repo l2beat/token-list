@@ -117,6 +117,9 @@ export class DeploymentSource implements TokenSource {
       return undefined
     }
     if (response.message !== 'OK') {
+      if (response.result === 'Contract source code not verified') {
+        return undefined
+      }
       throw new Error(`Unexpected response: ${response.message}`)
     }
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
