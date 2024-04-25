@@ -9,6 +9,7 @@ import {
 } from './comparison/toComparableTokens'
 import { Config } from './config/Config'
 import { getChainSources } from './getChainSources'
+import { UnionMerger } from './mergers/UnionMerger'
 import { Output } from './Output'
 import { SourcePipeline } from './pipeline/SourcePipeline'
 import { CoingeckoRanker } from './ranking/CoingeckoRanker'
@@ -68,7 +69,9 @@ export class Application {
     }
 
     if (config.sources.orbit) {
-      mainPipeline.add(new OrbitSource(config.orbitListUrl, logger, config.chains))
+      mainPipeline.add(
+        new OrbitSource(config.orbitListUrl, logger, config.chains),
+      )
     }
 
     if (config.sources.tokenLists) {
@@ -106,6 +109,16 @@ export class Application {
     mainPipeline.commit()
     mainPipeline.transform(new CanonicalArbitrumHeuristic())
     mainPipeline.transform(new CanonicalOptimismHeuristic())
+
+    const escrowPipeline = new SourcePipeline()
+    for (const sources of chainSources) {
+      if (sources.escrowSource) {
+        escrowPipeline.add(sources.escrowSource)
+      }
+    }
+    escrowPipeline.commit()
+
+    mainPipeline.merge(escrowPipeline, new UnionMerger(logger))
 
     // #endregion
 
