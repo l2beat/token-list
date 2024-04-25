@@ -39,16 +39,16 @@ export class Application {
 
     // #region pipeline
 
-    const pipeline = new SourcePipeline()
+    const mainPipeline = new SourcePipeline()
 
-    pipeline.add(new JsonSource(config.tokenFile, logger))
+    mainPipeline.add(new JsonSource(config.tokenFile, logger))
 
     if (config.sources.coingecko) {
-      pipeline.add(new CoingeckoSource(logger, config.chains))
+      mainPipeline.add(new CoingeckoSource(logger, config.chains))
     }
 
     if (config.sources.axelarConfig) {
-      pipeline.add(
+      mainPipeline.add(
         new AxelarConfigSource(logger, config.axelarListUrl, config.chains),
       )
     }
@@ -56,24 +56,24 @@ export class Application {
     if (config.sources.axelarGateway) {
       for (const { axelarSource } of chainSources) {
         if (axelarSource) {
-          pipeline.add(axelarSource)
+          mainPipeline.add(axelarSource)
         }
       }
     }
 
     if (config.sources.wormhole) {
-      pipeline.add(
+      mainPipeline.add(
         new WormholeSource(config.wormholeListUrl, logger, config.chains),
       )
     }
 
     if (config.sources.orbit) {
-      pipeline.add(new OrbitSource(config.orbitListUrl, logger, config.chains))
+      mainPipeline.add(new OrbitSource(config.orbitListUrl, logger, config.chains))
     }
 
     if (config.sources.tokenLists) {
       for (const list of config.tokenLists) {
-        pipeline.add(
+        mainPipeline.add(
           new TokenListSource(
             list.url,
             list.tag,
@@ -84,13 +84,13 @@ export class Application {
       }
     }
 
-    pipeline.merge()
-    pipeline.transform(new ChainTransformer(logger, config.chains))
+    mainPipeline.commit()
+    mainPipeline.transform(new ChainTransformer(logger, config.chains))
 
     if (config.sources.onChainMetadata) {
       for (const sources of chainSources) {
         if (sources.onChainMetadataSource) {
-          pipeline.add(sources.onChainMetadataSource)
+          mainPipeline.add(sources.onChainMetadataSource)
         }
       }
     }
@@ -98,14 +98,14 @@ export class Application {
     if (config.sources.deployments) {
       for (const sources of chainSources) {
         if (sources.deploymentSource) {
-          pipeline.add(sources.deploymentSource)
+          mainPipeline.add(sources.deploymentSource)
         }
       }
     }
 
-    pipeline.merge()
-    pipeline.transform(new CanonicalArbitrumHeuristic())
-    pipeline.transform(new CanonicalOptimismHeuristic())
+    mainPipeline.commit()
+    mainPipeline.transform(new CanonicalArbitrumHeuristic())
+    mainPipeline.transform(new CanonicalOptimismHeuristic())
 
     // #endregion
 
@@ -121,7 +121,7 @@ export class Application {
     )
 
     this.start = async () => {
-      const tokens = await pipeline.getTokens()
+      const tokens = await mainPipeline.getTokens()
       stats.outputStats(tokens)
       await output.write(tokens)
 

@@ -29,7 +29,7 @@ export class SourcePipeline {
     return this
   }
 
-  merge(): this {
+  commit(): this {
     const last = this.sources[this.sources.length - 1]
     if (Array.isArray(last) && last.length !== 0) {
       this.sources.push([])
