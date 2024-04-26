@@ -39,16 +39,16 @@ export class Application {
 
     // #region pipeline
 
-    const mainPipeline = new SourcePipeline()
+    const pipeline = new SourcePipeline()
 
-    mainPipeline.add(new JsonSource(config.tokenFile, logger))
+    pipeline.add(new JsonSource(config.tokenFile, logger))
 
     if (config.sources.coingecko) {
-      mainPipeline.add(new CoingeckoSource(logger, config.chains))
+      pipeline.add(new CoingeckoSource(logger, config.chains))
     }
 
     if (config.sources.axelarConfig) {
-      mainPipeline.add(
+      pipeline.add(
         new AxelarConfigSource(logger, config.axelarListUrl, config.chains),
       )
     }
@@ -56,26 +56,26 @@ export class Application {
     if (config.sources.axelarGateway) {
       for (const { axelarSource } of chainSources) {
         if (axelarSource) {
-          mainPipeline.add(axelarSource)
+          pipeline.add(axelarSource)
         }
       }
     }
 
     if (config.sources.wormhole) {
-      mainPipeline.add(
+      pipeline.add(
         new WormholeSource(config.wormholeListUrl, logger, config.chains),
       )
     }
 
     if (config.sources.orbit) {
-      mainPipeline.add(
+      pipeline.add(
         new OrbitSource(config.orbitListUrl, logger, config.chains),
       )
     }
 
     if (config.sources.tokenLists) {
       for (const list of config.tokenLists) {
-        mainPipeline.add(
+        pipeline.add(
           new TokenListSource(
             list.url,
             list.tag,
@@ -88,17 +88,17 @@ export class Application {
 
     for (const sources of chainSources) {
       if (sources.escrowSource) {
-        mainPipeline.add(sources.escrowSource)
+        pipeline.add(sources.escrowSource)
       }
     }
 
-    mainPipeline.commit()
-    mainPipeline.transform(new ChainTransformer(logger, config.chains))
+    pipeline.commit()
+    pipeline.transform(new ChainTransformer(logger, config.chains))
 
     if (config.sources.onChainMetadata) {
       for (const sources of chainSources) {
         if (sources.onChainMetadataSource) {
-          mainPipeline.add(sources.onChainMetadataSource)
+          pipeline.add(sources.onChainMetadataSource)
         }
       }
     }
@@ -106,14 +106,14 @@ export class Application {
     if (config.sources.deployments) {
       for (const sources of chainSources) {
         if (sources.deploymentSource) {
-          mainPipeline.add(sources.deploymentSource)
+          pipeline.add(sources.deploymentSource)
         }
       }
     }
 
-    mainPipeline.commit()
-    mainPipeline.transform(new CanonicalArbitrumHeuristic())
-    mainPipeline.transform(new CanonicalOptimismHeuristic())
+    pipeline.commit()
+    pipeline.transform(new CanonicalArbitrumHeuristic())
+    pipeline.transform(new CanonicalOptimismHeuristic())
 
     // #endregion
 
@@ -129,7 +129,7 @@ export class Application {
     )
 
     this.start = async () => {
-      const tokens = await mainPipeline.getTokens()
+      const tokens = await pipeline.getTokens()
       stats.outputStats(tokens)
       console.log('Tokens:', tokens.length)
       await output.write(tokens)
