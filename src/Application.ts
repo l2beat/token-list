@@ -131,7 +131,6 @@ export class Application {
     this.start = async () => {
       const tokens = await pipeline.getTokens()
       stats.outputStats(tokens)
-      console.log('Tokens:', tokens.length)
       await output.write(tokens)
 
       if (config.rankTokens) {
