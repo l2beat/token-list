@@ -68,9 +68,7 @@ export class Application {
     }
 
     if (config.sources.orbit) {
-      pipeline.add(
-        new OrbitSource(config.orbitListUrl, logger, config.chains),
-      )
+      pipeline.add(new OrbitSource(config.orbitListUrl, logger, config.chains))
     }
 
     if (config.sources.tokenLists) {
