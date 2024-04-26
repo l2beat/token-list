@@ -1,11 +1,9 @@
 import { mergeListings, TokenListing } from '../TokenListing'
-import { MergeSource, PipelineMerger } from './PipelineMerger'
 import { TokenSource } from './TokenSource'
 import { TokenTransformer } from './TokenTransformer'
 
 export class SourcePipeline {
-  private readonly sources: (TokenSource[] | TokenTransformer | MergeSource)[] =
-    []
+  private readonly sources: (TokenSource[] | TokenTransformer)[] = []
 
   add(source: TokenSource): this {
     const last = this.sources[this.sources.length - 1]
@@ -31,17 +29,6 @@ export class SourcePipeline {
     return this
   }
 
-  merge(pipeline: SourcePipeline, merger: PipelineMerger): this {
-    const last = this.sources[this.sources.length - 1]
-    const mergeSource: MergeSource = { pipeline, merger }
-    if (Array.isArray(last) && last.length === 0) {
-      this.sources[this.sources.length - 1] = mergeSource
-    } else {
-      this.sources.push(mergeSource)
-    }
-    return this
-  }
-
   commit(): this {
     const last = this.sources[this.sources.length - 1]
     if (Array.isArray(last) && last.length !== 0) {
@@ -58,11 +45,8 @@ export class SourcePipeline {
           step.map((source) => source.getTokens(result)),
         )
         result = mergeListings([result, ...listings])
-      } else if ('transform' in step) {
-        result = step.transform(result)
       } else {
-        const mergedTokens = await step.pipeline.getTokens()
-        result = step.merger.merge(result, mergedTokens)
+        result = step.transform(result)
       }
     }
     return result

@@ -9,7 +9,6 @@ import {
 } from './comparison/toComparableTokens'
 import { Config } from './config/Config'
 import { getChainSources } from './getChainSources'
-import { UnionMerger } from './mergers/UnionMerger'
 import { Output } from './Output'
 import { SourcePipeline } from './pipeline/SourcePipeline'
 import { CoingeckoRanker } from './ranking/CoingeckoRanker'
@@ -87,6 +86,12 @@ export class Application {
       }
     }
 
+    for (const sources of chainSources) {
+      if (sources.escrowSource) {
+        mainPipeline.add(sources.escrowSource)
+      }
+    }
+
     mainPipeline.commit()
     mainPipeline.transform(new ChainTransformer(logger, config.chains))
 
@@ -110,16 +115,6 @@ export class Application {
     mainPipeline.transform(new CanonicalArbitrumHeuristic())
     mainPipeline.transform(new CanonicalOptimismHeuristic())
 
-    const escrowPipeline = new SourcePipeline()
-    for (const sources of chainSources) {
-      if (sources.escrowSource) {
-        escrowPipeline.add(sources.escrowSource)
-      }
-    }
-    escrowPipeline.commit()
-
-    mainPipeline.merge(escrowPipeline, new UnionMerger(logger))
-
     // #endregion
 
     const stats = new Stats(logger, config.chains)
@@ -136,6 +131,7 @@ export class Application {
     this.start = async () => {
       const tokens = await mainPipeline.getTokens()
       stats.outputStats(tokens)
+      console.log('Tokens:', tokens.length)
       await output.write(tokens)
 
       if (config.rankTokens) {

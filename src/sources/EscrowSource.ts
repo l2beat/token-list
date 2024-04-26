@@ -370,7 +370,15 @@ export class EscrowSource implements TokenSource {
       }
 
       for (const token of tokens) {
-        result.push({ address: token })
+        result.push({
+          address: token,
+          inEscrow: {
+            [name]: Address(`${this.chain.prefix}:${address}`),
+          },
+          tags: {
+            escrow: true,
+          },
+        })
       }
 
       this.logger.info(`(${index}/${escrows.size}):${name}`, {
