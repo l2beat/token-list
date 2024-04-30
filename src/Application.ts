@@ -84,7 +84,13 @@ export class Application {
       }
     }
 
-    pipeline.merge()
+    for (const sources of chainSources) {
+      if (sources.escrowSource) {
+        pipeline.add(sources.escrowSource)
+      }
+    }
+
+    pipeline.commit()
     pipeline.transform(new ChainTransformer(logger, config.chains))
 
     if (config.sources.onChainMetadata) {
@@ -103,7 +109,7 @@ export class Application {
       }
     }
 
-    pipeline.merge()
+    pipeline.commit()
     pipeline.transform(new CanonicalArbitrumHeuristic())
     pipeline.transform(new CanonicalOptimismHeuristic())
 

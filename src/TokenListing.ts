@@ -36,6 +36,7 @@ export const TokenListing = z.strictObject({
     .optional(),
   identifiers: z.record(z.string()).optional(),
   images: z.record(z.string()).optional(),
+  inEscrow: z.record(z.string(), AddressType).optional(),
   bridge: z
     .strictObject({
       name: z.string(),
