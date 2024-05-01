@@ -16,13 +16,13 @@ import { TokenRanker } from './ranking/TokenRanker'
 import { TotalSupplyChecker } from './ranking/TotalSupplyChecker'
 import { AxelarConfigSource } from './sources/AxelarConfigSource'
 import { CanonicalArbitrumSource } from './sources/CanonicalArbitrumSource'
+import { CanonicalOptimismSource } from './sources/CanonicalOptimismSource'
 import { CoingeckoSource } from './sources/CoingeckoSource'
 import { JsonSource } from './sources/JsonSource'
 import { OrbitSource } from './sources/OrbitSource'
 import { TokenListSource } from './sources/TokenListSource'
 import { WormholeSource } from './sources/WormholeSource'
 import { Stats } from './Stats'
-import { CanonicalOptimismHeuristic } from './transformers/CanonicalOptimismHeuristic'
 import { ChainTransformer } from './transformers/ChainTransformer'
 
 export class Application {
@@ -116,8 +116,12 @@ export class Application {
       pipeline.add(new CanonicalArbitrumSource(arbitrumPublicClient, logger))
     }
 
-    pipeline.commit()
-    pipeline.transform(new CanonicalOptimismHeuristic())
+    const optimismPublicClient = chainSources.find(
+      (chain) => chain.chain.id === 10,
+    )?.client
+    if (optimismPublicClient) {
+      pipeline.add(new CanonicalOptimismSource(optimismPublicClient, logger))
+    }
 
     // #endregion
 
