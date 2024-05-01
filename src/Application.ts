@@ -15,13 +15,13 @@ import { CoingeckoRanker } from './ranking/CoingeckoRanker'
 import { TokenRanker } from './ranking/TokenRanker'
 import { TotalSupplyChecker } from './ranking/TotalSupplyChecker'
 import { AxelarConfigSource } from './sources/AxelarConfigSource'
+import { CanonicalArbitrumSource } from './sources/CanonicalArbitrumSource'
 import { CoingeckoSource } from './sources/CoingeckoSource'
 import { JsonSource } from './sources/JsonSource'
 import { OrbitSource } from './sources/OrbitSource'
 import { TokenListSource } from './sources/TokenListSource'
 import { WormholeSource } from './sources/WormholeSource'
 import { Stats } from './Stats'
-import { CanonicalArbitrumHeuristic } from './transformers/CanonicalArbitrumHeuristic'
 import { CanonicalOptimismHeuristic } from './transformers/CanonicalOptimismHeuristic'
 import { ChainTransformer } from './transformers/ChainTransformer'
 
@@ -109,8 +109,14 @@ export class Application {
       }
     }
 
+    const arbitrumPublicClient = chainSources.find(
+      (chain) => chain.chain.id === 42161,
+    )?.client
+    if (arbitrumPublicClient) {
+      pipeline.add(new CanonicalArbitrumSource(arbitrumPublicClient, logger))
+    }
+
     pipeline.commit()
-    pipeline.transform(new CanonicalArbitrumHeuristic())
     pipeline.transform(new CanonicalOptimismHeuristic())
 
     // #endregion
