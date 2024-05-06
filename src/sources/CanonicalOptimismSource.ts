@@ -44,14 +44,13 @@ export class CanonicalOptimismSource implements TokenSource {
           publicClient: this.publicClient,
         })
 
-        const [l1AddressResult] = await Promise.allSettled([
-          contract.read.l1Token(),
-        ])
+        const l1AddressResult = await contract.read
+          .l1Token()
+          .catch(() => undefined)
 
-        const l1Address =
-          l1AddressResult.status === 'fulfilled'
-            ? Address(`eth:${l1AddressResult.value}`)
-            : undefined
+        const l1Address = l1AddressResult
+          ? Address(`eth:${l1AddressResult}`)
+          : undefined
 
         token.tags ??= {}
         token.tags.optimismCanonical = true
